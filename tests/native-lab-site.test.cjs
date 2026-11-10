@@ -33,5 +33,5 @@ test("Physical board proof is not simulated or automatically asserted",()=>{
   assert.match(js,/new TextEncoder/);
   assert.match(js,/receivedCode/);
   assert.match(js,/verifiedCases/);
-  assert.match(js,/Chưa có bằng chứng|Chưa có|chưa có/);
+  assert.match(js,/WebSerial logs are user-captured/);
 });
