@@ -1,6 +1,6 @@
 # ViFirmware · CVNSS4.0 × BilaScript × Embedded Data Verification
 
-**An evidence-first, multilingual research laboratory** for Vietnamese text representation, Base27/trits and embedded-oriented data transport. Website: `docs/index.html` (GitHub Pages; enable Source: GitHub Actions in Settings → Pages).
+**An evidence-first, multilingual research laboratory** for Vietnamese text representation, Base27/trits and embedded-oriented data transport. Website: `docs/index.html` (GitHub Pages; enable **Deploy from a branch → main → /docs** in Settings → Pages).
 
 ## What this repository does
 
@@ -50,3 +50,11 @@ See [formal specification](spec/VF1.md), [BilaScript integration](examples/READM
 ## Sources and rights
 
 CVNSS4.0 originally by **Kiều Trường Lâm & Trần Tư Bình**; encoder derived from [xulytiengviet/CVNSS4.0](https://github.com/xulytiengviet/CVNSS4.0), v5.0.0-audit-safe. BilaScript frontend: [xulytiengviet/bilascript](https://github.com/xulytiengviet/bilascript). Lab additions: Long Ngo, MIT. Rights to the original CVNSS4.0 work are not changed by this repository's license.
+
+## Publish the website
+
+Go to **Settings → Pages → Build and deployment → Deploy from a branch → main → /docs → Save**. Once GitHub activates Pages, open https://xulytiengviet.github.io/vifirmware/. Repository settings are required; repository write access alone does not activate Pages.
+
+## Embedded reference
+
+A minimal on-device VF1 self-check using a **precomputed** CVNSS4.0 vector is in [`firmware/esp32s3/`](firmware/esp32s3/). This has not been board-verified and does not implement the full linguistic CVNSS4.0 decoder on an MCU.
