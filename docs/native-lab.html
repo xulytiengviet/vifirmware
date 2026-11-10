@@ -13,7 +13,7 @@
 </head>
 <body>
 <a class="skip" href="#experiment">Đến khu thực nghiệm</a>
-<header class="bar"><div class="wrap top"><a href="./index.html" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>NATIVE CODEC · ESP32-S3 · LAB</small></span></a><nav aria-label="Điều hướng"><a href="#experiment">Thực nghiệm</a><a href="#evidence">Bằng chứng</a><a href="#method">Phương pháp</a><a href="#reproduce">Tái lập</a></nav><a class="gh" href="https://github.com/xulytiengviet/vifirmware" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
+<header class="bar"><div class="wrap top"><a href="./index.html" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>NATIVE CODEC · ESP32-S3 · LAB</small></span></a><nav aria-label="Điều hướng"><a href="#experiment">Thực nghiệm</a><a href="#evidence">Bằng chứng</a><a href="#method">Phương pháp</a><a href="#reproduce">Tái lập</a><a href="./backprop-paper.html">Bài báo GRU</a></nav><a class="gh" href="https://github.com/xulytiengviet/vifirmware" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
 <main>
 <section class="wrap proof-hero">
  <div><div class="eyebrow"><span class="led"></span> EMBEDDED VIETNAMESE CODEC / REPRODUCIBLE RESEARCH</div>
@@ -99,6 +99,12 @@ idf.py build
 idf.py -p COM5 flash monitor
 # Qua UART0 115200: ENC Tôi yêu tiếng Việt</pre></div>
 <div class="actions"><a class="cta" href="https://github.com/xulytiengviet/vifirmware/tree/main/native">Xem lõi C++ →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions">Xem GitHub Actions ↗</a></div>
+</section>
+<section class="wrap section" id="neural-research">
+<div class="section-top"><span class="kicker">05 / NEURAL EXTENSION</span><h2>Symbolic CVNSS4.0 + neural GRU: nghiên cứu tiếp nối</h2>
+<p>Bản native lab kiểm chứng thuật toán CVNSS4.0 và truyền UART; nhánh GRU học cách xếp hạng ứng viên Unicode bằng backpropagation, không sửa quy tắc. Phải so sánh với Viterbi trên cùng lattice và dữ liệu độc lập trước khi đưa trọng số xuống ESP32-S3.</p></div>
+<div class="actions"><a class="cta" href="./backprop-paper.html">Đọc bài báo · Base27 · Backprop →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/tree/main/research/backprop">Giao thức tái lập ↗</a></div>
+<p><strong>Ranh giới bằng chứng:</strong> CI host/nền tảng không phải kết quả thực thi neural trên board. Chỉ công bố RAM/Flash/độ trễ GRU nếu có artifact và log thực.</p>
 </section>
 </main>
 <footer><div class="wrap foot"><span>ViFirmware · Native Proof Lab · 2026</span><span>Thuật toán: CVNSS4.0 v5 · Phần mềm & nghiên cứu: Long Ngo</span></div></footer>
