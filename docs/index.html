@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b0d">
+<meta name="description" content="ViFirmware: phòng thí nghiệm chứng minh CVNSS4.0 × BilaScript × Base27/trít × C++, Java, Python, Swift bằng dữ liệu và kiểm thử có thể tái lập.">
+<title>ViFirmware — CVNSS4.0 Embedded Verification Lab</title>
+<link rel="stylesheet" href="./style.css">
+<script defer src="./assets/cvnss-converter.js"></script>
+<script defer src="./frame.js"></script>
+<script defer src="./app.js"></script>
+</head>
+<body>
+<a class="skip" href="#lab">Chuyển đến phòng thí nghiệm</a>
+<header class="bar"><div class="wrap top">
+<a href="#home" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>CVNSS4.0 / EMBEDDED LAB</small></span></a>
+<nav aria-label="Điều hướng"><a href="#architecture">Kiến trúc</a><a href="#lab">Thử nghiệm</a><a href="#languages">4 ngôn ngữ</a><a href="#science">Kiểm chứng</a></nav>
+<a class="gh" href="https://github.com/xulytiengviet/vifirmware" rel="noopener noreferrer" target="_blank">GitHub ↗</a>
+</div></header>
+<main id="home">
+<section class="wrap hero">
+<div class="hero-left">
+<div class="eyebrow"><span class="led"></span> OPEN RESEARCH · VERSIONED · OFFLINE-FIRST</div>
+<h1>Từ <em>chữ Việt</em> đến<br><strong>phần mềm nhúng<span class="caret">_</span></strong></h1>
+<p class="lead">Đặc tả hình thức CVNSS4.0, xác minh tính đúng đắn và xây dựng giao thức truyền dữ liệu thử nghiệm cho <b>ESP32-S3</b>. BilaScript làm lớp diễn đạt; C++, Java, Python, Swift kiểm tra tính tương thích truyền tải.</p>
+<div class="actions"><a class="cta" href="#lab">Chạy kiểm chứng trực tiếp →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">Đọc đặc tả VF1 ↗</a></div>
+<div class="warning"><b>RESEARCH NOTICE</b> Đây là nguyên mẫu phần mềm và demo trình duyệt. Chưa có kết quả flash firmware lên ESP32-S3, bitstream FPGA, ISA tam phân vật lý hay chứng minh CVNSS4.0 tự giải mã 100% trong mọi trường hợp.</div>
+</div>
+<div class="monitor" aria-label="Sơ đồ đường ống dữ liệu">
+<div class="monitor-head"><span class="dots">● ● ●</span> PIPELINE.MONITOR <span class="right">REFERENCE</span></div>
+<div class="pipe"><div class="pipe-node"><small>01 · INPUT</small><b>Quốc Ngữ / NFC</b><span>Unicode + dấu thanh</span></div><div class="arrow">↓</div><div class="pipe-node active"><small>02 · CVNSS4.0 v5</small><b>Chuyển đổi & audit</b><span>56 nhóm nhập nhằng</span></div><div class="arrow">↓</div><div class="pipe-node"><small>03 · TRANSPORT</small><b>Base27 / 3 trít / VF1</b><span>CRC32 + byte sidecar</span></div><div class="arrow">↓</div><div class="pipe-node"><small>04 · TARGETS</small><b>C++ · Java · Python · Swift</b><span>Đối chiếu đầu ra</span></div></div>
+<div class="monfoot"><span>TRIT STATE: <b>0 1 2</b></span><span>27 = 3³</span></div>
+</div>
+</section>
+<section class="wrap metrics" aria-label="Thông số tham chiếu">
+<div><small>CVNSS RULES</small><strong>52</strong><span>Quy tắc công bố</span></div>
+<div><small>AMBIGUITY GROUPS</small><strong id="stat-ambiguity">—</strong><span>Đếm từ converter</span></div>
+<div><small>REFERENCE TEST</small><strong id="stat-tests">—</strong><span>Chạy ở máy của bạn</span></div>
+<div><small>PORTABLE TARGETS</small><strong>04</strong><span>C++ / Java / Python / Swift</span></div>
+</section>
+<section id="architecture" class="wrap section">
+<div class="section-top"><span class="kicker">01 / ARCHITECTURE</span><h2>Tách biệt đúng ba khái niệm</h2><p>CVNSS4.0 là biểu diễn chữ; BilaScript là frontend ngôn ngữ lập trình; VF1 là một giao thức dữ liệu có thể kiểm tra. Không đánh đồng ba tầng này với mã máy.</p></div>
+<div class="three"><article><span class="num">A / LANGUAGE</span><h3>CVNSS4.0</h3><p>Sử dụng converter thật v5.0.0-audit-safe. Giải mã chuẩn tắc có thể chọn một trong nhiều ứng viên.</p><code>cqn → cvss → candidates</code></article><article><span class="num">B / COMPILATION</span><h3>BilaScript</h3><p>BilaScript v4 biên dịch thành JavaScript; chưa có backend native C++, Java, Python hay Swift.</p><code>.bila → AST → JavaScript</code></article><article><span class="num">C / EMBEDDED DATA</span><h3>VF1 / Base27</h3><p>4 chương trình độc lập kiểm tra cùng định dạng khung, CRC và khôi phục byte gốc có sidecar.</p><code>CODE → TRITS + HEX + CRC</code></article></div>
+</section>
+<section id="lab" class="wrap section">
+<div class="section-top"><span class="kicker">02 / LIVE LAB</span><h2>Nhập tiếng Việt. Xem bằng chứng.</h2><p>Chạy hoàn toàn trong trình duyệt, không gửi dữ liệu đến máy chủ. Dữ liệu được NFC hóa cho lớp CVNSS; byte gốc vẫn được giữ trong sidecar VF1.</p></div>
+<div class="labgrid">
+<div class="panel">
+<div class="panel-title"><span>INPUT / CQN</span><span class="status"><span class="led"></span> LOCAL</span></div>
+<label for="source">Văn bản Quốc Ngữ</label>
+<textarea id="source" rows="4" spellcheck="false">Tôi yêu tiếng Việt</textarea>
+<div class="lab-actions"><button type="button" id="run">MÃ HÓA & KIỂM CHỨNG</button><button type="button" id="reset" class="minor">Đặt lại</button></div>
+<p class="hint">Chỉ nhận đầu ra CVNSS4.0 nằm trong A–Z và SPACE cho VF1. Nếu có dấu câu hoặc ký tự khác, hệ thống báo lỗi, không âm thầm xóa.</p>
+<div class="statbox"><span>Trạng thái</span><b id="out-state" role="status" aria-live="polite">Chưa chạy</b></div>
+</div>
+<div class="panel">
+<div class="panel-title"><span>OUTPUT / AUDIT</span><span class="status">REFERENCE ENGINE</span></div>
+<div class="result"><small>CVNSS4.0 ASCII</small><code id="out-code">—</code></div>
+<div class="result"><small>BASE27 → TRITS (0/1/2)</small><code id="out-trits">—</code></div>
+<div class="result"><small>GIẢI MÃ CVNSS CHUẨN TẮC</small><code id="out-canonical">—</code></div>
+<div class="result"><small>GIẢI MÃ VF1 TỪ BYTE GỐC</small><code id="out-restored">—</code></div>
+<div id="proof" class="proof">Bắt đầu để xem sự khác nhau giữa khôi phục canonical và khôi phục byte-exact.</div>
+</div>
+</div>
+<div class="wide-panel">
+<div class="panel-title"><span>VF1 · FRAME / PORTABLE OUTPUT</span><button type="button" id="copy" class="textbtn">Sao chép ↗</button></div>
+<pre id="out-frame" class="frame">VF1|CODE|TRITS|HEX|CRC32</pre>
+<div class="frame-bottom"><span id="sizes">Byte-size chưa đo</span><span>CRC32 = phát hiện lỗi, không xác thực mật mã</span></div>
+</div>
+</section>
+<section id="languages" class="wrap section">
+<div class="section-top"><span class="kicker">03 / INTEROPERABILITY</span><h2>4 ngôn ngữ. 1 hợp đồng dữ liệu.</h2><p>Các triển khai không giả vờ chứa toàn bộ quy tắc ngôn ngữ CVNSS4.0. Chúng biên dịch và xác minh giao thức VF1 độc lập trên mỗi runtime.</p></div>
+<div class="lang-tabs" role="tablist" aria-label="Chọn ngôn ngữ">
+<button type="button" class="selected" data-lang="cpp" role="tab" aria-selected="true">C++17</button>
+<button type="button" data-lang="java" role="tab" aria-selected="false">Java 17</button>
+<button type="button" data-lang="python" role="tab" aria-selected="false">Python 3</button>
+<button type="button" data-lang="swift" role="tab" aria-selected="false">Swift 5</button>
+<button type="button" data-lang="bila" role="tab" aria-selected="false">BilaScript v4</button>
+</div>
+<div class="code-card"><div class="panel-title"><span id="lang-path">portable/cpp/vifirmware.cpp</span><a id="lang-link" target="_blank" rel="noopener noreferrer" href="https://github.com/xulytiengviet/vifirmware/blob/main/portable/cpp/vifirmware.cpp">Mã nguồn ↗</a></div><pre id="lang-code">c++ -std=c++17 -O2 portable/cpp/vifirmware.cpp -o vf
+./vf encode "XIN CHAO" "Xin chào"</pre></div>
+<div class="languages-note"><b>Chứng minh được:</b> Cùng một khung VF1, trits và CRC32; độc lập runtime; khôi phục đúng byte khi trường HEX được giữ nguyên. <b>Chưa chứng minh:</b> 4 ngôn ngữ đều triển khai đầy đủ CVNSS4.0, hoặc firmware đã chạy trên vi điều khiển.</div>
+</section>
+<section id="science" class="wrap section">
+<div class="section-top"><span class="kicker">04 / SCIENTIFIC EVIDENCE</span><h2>Thử nghiệm có ranh giới rõ ràng</h2><p>Không dùng các số liệu mô phỏng để tuyên bố kết quả đo trên phần cứng.</p></div>
+<div class="checks">
+<div><span>PASS / REFERENCE</span><h3>Converter có báo cáo audit</h3><p>Đếm self-test, bản vá và nhóm nhập nhằng ngay từ script gốc, không tạo số liệu giả.</p></div>
+<div><span>PASS / PROTOCOL</span><h3>VF1 byte-exact có sidecar</h3><p>Đảm bảo byte gốc được vận chuyển cùng mã và xác minh CRC32. Kèm chi phí tăng dung lượng.</p></div>
+<div><span>TEST / CI</span><h3>C++, Java, Python, Swift</h3><p>Workflow riêng thực thi vector chung và kiểm tra tương đương đầu ra khi trình biên dịch có sẵn.</p></div>
+<div><span>NOT CLAIMED</span><h3>ESP32-S3 & FPGA</h3><p>Chưa có .bin được flash, đo heap/flash/latency trên board hoặc bitstream được xác thực.</p></div>
+</div>
+<div class="actions"><a class="cta" href="https://github.com/xulytiengviet/vifirmware/actions">Xem kết quả GitHub Actions ↗</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/BUILD.md">Tái lập thí nghiệm ↗</a></div>
+</section>
+<section class="wrap section" id="references">
+<div class="section-top"><span class="kicker">05 / REFERENCES</span><h2>Nguồn gốc & trách nhiệm nghiên cứu</h2></div>
+<p>CVNSS4.0 được phát triển bởi Kiều Trường Lâm và Trần Tư Bình. Bộ chuyển đổi v5.0.0-audit-safe được lấy từ dự án <a href="https://github.com/xulytiengviet/CVNSS4.0">CVNSS4.0</a>. BilaScript là dự án frontend riêng <a href="https://github.com/xulytiengviet/bilascript">BilaScript</a>. Giao thức VF1 và phòng thí nghiệm này là công cụ kiểm thử độc lập. Nghiên cứu/phát triển phần mềm: Long Ngo.</p>
+</section>
+</main><footer><div class="wrap foot"><span>ViFirmware · OPEN VERIFICATION LAB · 2026</span><span>MIT (mã mới) · Quyền công trình CVNSS4.0 gốc được bảo lưu</span></div></footer>
+</body></html>

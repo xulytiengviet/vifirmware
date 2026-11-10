@@ -1,0 +1,60 @@
+name: ViFirmware cross-language verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-java@v4
+        with: {distribution: 'temurin', java-version: '17'}
+      - name: Node reference and upstream converter
+        run: node --test tests/frame.test.cjs
+      - name: Python tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Compile C++17 and Java
+        run: |
+          g++ -std=c++17 -Wall -Wextra -Werror -pedantic portable/cpp/vifirmware.cpp -o /tmp/vf_cpp
+          javac portable/java/ViFirmware.java
+      - name: Compare C++, Java, Python and raw UTF-8
+        shell: bash
+        run: |
+          set -euo pipefail
+          python portable/python/vifirmware.py encode "XIN CHAO" "Xin chào" > /tmp/py
+          /tmp/vf_cpp encode "XIN CHAO" "Xin chào" > /tmp/cpp
+          java -cp portable/java ViFirmware encode "XIN CHAO" "Xin chào" > /tmp/java
+          cmp /tmp/py /tmp/cpp
+          cmp /tmp/py /tmp/java
+          FRAME="$(cat /tmp/py)"
+          printf 'Xin chào' > /tmp/raw
+          /tmp/vf_cpp decode "$FRAME" > /tmp/raw_cpp
+          java -cp portable/java ViFirmware decode "$FRAME" > /tmp/raw_java
+          cmp /tmp/raw /tmp/raw_cpp
+          cmp /tmp/raw /tmp/raw_java
+          echo "PASS: C++ / Java / Python VF1 exact parity"
+
+  swift:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Swift
+        run: swiftc portable/swift/ViFirmware.swift -o /tmp/vf_swift
+      - name: Verify Swift and Python parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 portable/python/vifirmware.py encode "XIN CHAO" "Xin chào" > /tmp/py
+          /tmp/vf_swift encode "XIN CHAO" "Xin chào" > /tmp/swift
+          cmp /tmp/py /tmp/swift
+          FRAME="$(cat /tmp/py)"
+          printf 'Xin chào' > /tmp/raw
+          /tmp/vf_swift decode "$FRAME" > /tmp/raw_swift
+          cmp /tmp/raw /tmp/raw_swift
+          echo "PASS: Swift / Python VF1 exact parity"
