@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080c11">
+<meta name="description" content="Research proposal: Rule-Constrained Backpropagation for Context-Aware Vietnamese Text Reconstruction from CVNSS4.0 with Base-27 and Ternary Edge Models.">
+<title>CVNSS4.0 × Backpropagation — ViFirmware Research Paper</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+:root{color-scheme:dark;--bg:#080c11;--panel:#101822;--line:#263445;--muted:#9daec0;--cyan:#52d9d0;--gold:#ffcf71;--red:#ff7785}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:#f1f6fc;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7;margin:0}
+.wrap-paper{max-width:1160px;margin:0 auto;padding:0 24px}
+.paper-head{position:sticky;top:0;background:#09111cf2;border-bottom:1px solid var(--line);z-index:5;backdrop-filter:blur(12px)}
+.paper-top{display:flex;gap:16px;align-items:center;justify-content:space-between;min-height:66px;flex-wrap:wrap}
+.paper-top .logo{font-weight:800;font-size:1.05rem;text-decoration:none;color:#fff}.paper-top .logo b{color:var(--cyan)}
+.paper-top nav{display:flex;gap:14px;flex-wrap:wrap}.paper-top nav a{color:#c0ccda;text-decoration:none;font-size:.81rem}.paper-top nav a:hover{color:var(--cyan)}
+.paper-hero{padding:76px 0 52px;background:radial-gradient(circle at 82% 5%,#12455455,transparent 42%),linear-gradient(180deg,#0b131f,#080c11)}
+.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.17em;font-size:.77rem;font-weight:750}
+.paper-hero h1{font-size:clamp(2rem,4.2vw,3.9rem);line-height:1.14;max-width:1000px;margin:18px 0 23px;letter-spacing:-.04em}
+.paper-hero .lead{color:#c0cad6;max-width:920px;font-size:1.04rem}
+.paper-actions{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0}
+.paper-actions a,.action-link{display:inline-flex;align-items:center;border-radius:10px;padding:11px 17px;text-decoration:none;background:var(--cyan);color:#081418;font-weight:750}
+.paper-actions a.secondary,.action-link.secondary{border:1px solid var(--line);background:#121c29;color:#e0eaf1}
+.notice{border:1px solid #7d652f;background:#33291655;padding:15px 19px;color:#f9dba3;border-radius:12px;font-size:.94rem;margin-top:22px}
+.paper-section{padding:53px 0;border-top:1px solid var(--line)}.paper-section h2{font-size:clamp(1.4rem,2.2vw,2rem);margin:0 0 15px}.paper-section h3{font-size:1.1rem;color:#f8dd9f}
+.paper-section p,.paper-section li{color:#c1cedd}.paper-section a{color:#79e5d9}
+.kicker{font-size:.73rem;letter-spacing:.17em;font-weight:800;color:var(--cyan)}
+.paper-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0}
+.paper-card,.paper-lab{border:1px solid var(--line);border-radius:15px;padding:22px;background:var(--panel);min-width:0}
+.paper-card h3{margin:0 0 8px;color:#fff}.paper-card p{margin:0;font-size:.94rem}
+.paper-flow{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:27px 0}.paper-flow span{border:1px solid #3b556a;border-radius:9px;background:#12212b;padding:12px 14px;font-weight:650}.paper-flow em{color:var(--cyan);font-style:normal}
+.paper-formula{padding:18px 20px;overflow-x:auto;background:#0a1019;border-left:3px solid var(--cyan);color:#e8f2fd;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:5px;margin:19px 0}
+.paper-table{width:100%;border-collapse:collapse;font-size:.93rem;margin:17px 0}.paper-table th,.paper-table td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:12px 14px}.paper-table th{color:var(--cyan);background:#11202b}.paper-table td{color:#cbd6e4}
+.paper-lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.paper-lab label{font-size:.87rem;color:#c6d4e5;font-weight:600}
+.paper-lab input[type=text]{display:block;width:100%;margin:8px 0 15px;padding:12px;background:#080e16;border:1px solid #425166;color:#fff;border-radius:8px;font:inherit}
+.paper-lab button{border:0;border-radius:9px;padding:9px 15px;background:var(--cyan);color:#07151a;font-weight:750;cursor:pointer}
+.paper-lab button:focus-visible,.paper-top a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.paper-lab pre{max-height:240px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#090f17;border-radius:8px;padding:14px;color:#d5e5ee;font-size:.85rem}
+.paper-meter{height:16px;border-radius:99px;background:#303c4d;overflow:hidden;margin-top:12px}.paper-meter>div{height:100%;width:50%;background:linear-gradient(90deg,#14a797,#6ce5d4);transition:width .18s}
+.paper-stats{display:flex;gap:18px;flex-wrap:wrap;color:#afc4d7;margin:15px 0}.paper-stats b{color:white}
+.paper-small{font-size:.83rem;color:#9cabbc!important}
+.paper-foot{border-top:1px solid var(--line);padding:28px 0 50px;color:#9daec0;font-size:.85rem}
+@media(max-width:760px){.paper-grid,.paper-lab-grid{grid-template-columns:1fr}.paper-hero{padding:46px 0 32px}.paper-top{padding:12px 0}.paper-top nav{gap:9px}.paper-flow span{font-size:.84rem}.paper-section{padding:37px 0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="paper-head"><div class="wrap-paper paper-top">
+<a class="logo" href="./index.html">VF<b>.</b> ViFirmware / RESEARCH</a>
+<nav aria-label="Điều hướng bài báo">
+<a href="#abstract">Tóm tắt</a><a href="#formal">Đặc tả</a><a href="#model">GRU &amp; Viterbi</a><a href="#lab">Mô phỏng</a><a href="#protocol">ESP32-S3</a><a href="#reproduce">Tái lập</a>
+</nav>
+</div></header>
+<main>
+<section class="paper-hero"><div class="wrap-paper">
+<div class="eyebrow">Preprint proposal · Symbolic + Neural AI · 10 Nov 2026</div>
+<h1>Rule-Constrained Backpropagation for Context-Aware Vietnamese Text Reconstruction from CVNSS4.0 with Base-27 and Ternary Edge Models</h1>
+<p class="lead"><strong>Lan truyền ngược có ràng buộc quy tắc</strong> để phục hồi tiếng Việt theo ngữ cảnh: giữ CVNSS4.0 làm đặc tả hình thức, dùng GRU nhỏ để xếp hạng ứng viên Unicode, đối chiếu công bằng với Viterbi; nghiên cứu khả năng triển khai suy luận trên firmware ESP32-S3.</p>
+<p class="paper-small">Đề cương nghiên cứu và giao thức kiểm chứng, không phải bài báo đã phản biện hoặc báo cáo kết quả GRU đo được. Tác giả bản đề xuất: Long Ngo. CVNSS4.0 gốc: Kiều Trường Lâm và Trần Tư Bình.</p>
+<div class="paper-actions"><a href="./native-lab.html">Thử native ESP32-S3 →</a><a href="./index.html#lab" class="secondary">Chạy bộ tham chiếu →</a><a href="https://github.com/xulytiengviet/vifirmware/tree/main/research/backprop" class="secondary">Giao thức tái lập ↗</a></div>
+<div class="notice"><strong>Evidence policy:</strong> phép biến đổi Base27↔trít và phép kiểm tra khung VF1 có đặc tả/kiểm thử. Demo gradient bên dưới là mô hình đồ chơi hai ứng viên, KHÔNG phải GRU đã huấn luyện hoặc bằng chứng GRU hơn Viterbi. Chưa có đo Flash/RAM/latency của neural decoder trên bo ESP32-S3 thật.</div>
+</div></section>
+<section class="wrap-paper paper-section" id="abstract"><div class="kicker">01 / ABSTRACT &amp; QUESTION</div>
+<h2>Giả thuyết có thể bác bỏ bằng thực nghiệm</h2>
+<p>Khi một mã CVNSS4.0 có nhiều giải mã hợp lệ, liệu bộ xếp hạng ngữ cảnh bằng GRU — học từ corpus Unicode/CVNSS4.0 với backpropagation — có giảm lỗi khôi phục so với bộ giải mã Viterbi n-gram, khi dùng <strong>cùng tập ứng viên, cùng phân hoạch dữ liệu và cùng giới hạn tài nguyên</strong>?</p>
+<div class="paper-grid">
+<div class="paper-card"><h3>Symbolic</h3><p>Encoder CVNSS4.0 v5 bất biến, tập ứng viên hợp lệ, ràng buộc miền ký tự và bộ kiểm chứng round-trip.</p></div>
+<div class="paper-card"><h3>Neural</h3><p>GRU nhỏ học điểm ngữ cảnh cho mỗi ứng viên. Cross-entropy và BPTT cập nhật trọng số, không sửa quy tắc gốc.</p></div>
+<div class="paper-card"><h3>Edge</h3><p>Base27/trít trong VF1; lượng tử hóa int8 hoặc tam phân chỉ sau khi đạt parity và có chỉ số phần cứng thật.</p></div>
+</div>
+<div class="paper-flow" role="img" aria-label="Unicode đến CVNSS4.0, tập ứng viên, GRU, kiểm chứng, VF1 và ESP32-S3">
+<span>Unicode NFC</span><em>→</em><span>CVNSS4.0 cố định</span><em>→</em><span>Lattice ứng viên</span><em>→</em><span>GRU / Viterbi</span><em>→</em><span>Kiểm chứng</span><em>→</em><span>VF1 / ESP32-S3</span></div>
+</section>
+<section class="wrap-paper paper-section" id="formal"><div class="kicker">02 / FORMAL SPECIFICATION</div>
+<h2>Đặc tả hình thức: đúng cái gì, không bảo đảm cái gì?</h2>
+<p>Gọi E là bộ mã hóa CVNSS4.0 phiên bản cố định trên một miền tiếng Việt NFC được công bố; C(c) là tập ứng viên Unicode do bộ quy tắc tạo ra cho mã c. Khi dự đoán y, hệ thống <strong>bắt buộc</strong> kiểm tra y ∈ C(c) và E(y)=c (theo cùng cấu hình). Không có ứng viên hợp lệ phải trả lỗi/abstain, không tự bịa Unicode.</p>
+<div class="paper-formula">E : D_NFC → Σ*     ;    Σ = {A,…,Z,SPACE} trên miền VF1 nghiêm ngặt
+C(c) = {y ∈ D_NFC | E(y) = c}  (theo tập ứng viên được liệt kê / kiểm chứng)
+ŷ = argmax_{y ∈ C(c)} Sθ(y | c, context)
+Safety: C(c) = ∅ ⇒ ABSTAIN
+Restricted round-trip: E(ŷ) = c  (khi ŷ được kiểm tra lại)</div>
+<p><strong>Giới hạn:</strong> E có thể many-to-one; không thể suy ra D(E(x))=x với mọi x nếu thiếu ngữ cảnh hoặc sidecar. Giao thức VF1 dùng raw UTF-8 HEX sidecar + CRC32 để khôi phục <em>byte gốc</em> khi frame hợp lệ, không chứng minh CVNSS4.0 tự khôi phục nguyên văn, không phải nén và CRC32 không phải MAC/chữ ký xác thực.</p>
+<p>Ràng buộc an toàn có thể kiểm chứng bằng property-based test: mọi đầu ra đã chấp nhận thuộc tập ứng viên; mọi ứng viên đã chấp nhận mã hóa về đúng c; frame sai CRC/độ dài/ký tự bị từ chối; UTF-8 sidecar khôi phục đúng byte.</p>
+</section>
+<section class="wrap-paper paper-section" id="model"><div class="kicker">03 / RULE-CONSTRAINED GRU</div>
+<h2>Backpropagation học ngữ cảnh, Viterbi làm đối chứng</h2>
+<p>Mã c được chia theo cùng tokenizer/lattice cho cả hai phương pháp. Mạng dùng embedding nhỏ và GRU để tạo trạng thái ngữ cảnh hᵢ, chấm điểm sθ(y,cᵢ,hᵢ) cho từng ứng viên y. Softmax chỉ tính trên những ứng viên hợp lệ, không trên toàn bộ Unicode.</p>
+<div class="paper-formula">pθ(y | cᵢ,hᵢ) = exp(sθ(y,cᵢ,hᵢ)) / Σᵤ∈C(cᵢ) exp(sθ(u,cᵢ,hᵢ))
+L(θ) = − Σᵢ log pθ(y*ᵢ | cᵢ,hᵢ)
+θ ← θ − η ∇θ L    (Backpropagation Through Time / BPTT)</div>
+<p>Phép lấy gradient áp dụng cho embedding, GRU và hàm điểm; <strong>không lấy đạo hàm trực tiếp qua phép thay ký tự CVNSS4.0</strong>. Nếu ngữ cảnh được xem hai chiều, cần ghi rõ độ trễ/bộ đệm vì firmware có thể chỉ giải mã trực tuyến một chiều.</p>
+<div class="paper-grid">
+<div class="paper-card"><h3>E0 · Canonical</h3><p>Chỉ bộ giải mã chuẩn tắc; không học. Đo lỗi trên đúng nhóm nhập nhằng.</p></div>
+<div class="paper-card"><h3>E1 · Viterbi</h3><p>Tối đa hóa điểm phát xạ và chuyển tiếp bigram có làm trơn trên cùng lattice.</p></div>
+<div class="paper-card"><h3>E2 · GRU nhỏ</h3><p>Embedding 24, hidden 48 là cấu hình khởi điểm cần điều chỉnh trên validation, không phải cấu hình tối ưu đã đo.</p></div>
+</div>
+<table class="paper-table"><thead><tr><th>Điều kiện đối chứng</th><th>Quy định</th></tr></thead><tbody>
+<tr><td>Dữ liệu</td><td>Tách train/dev/test theo tài liệu nguồn; không tạo train/test bằng cách biến đổi cùng câu rồi trộn lại.</td></tr>
+<tr><td>Ứng viên</td><td>Hai hệ nhận cùng C(c), cùng bộ chuẩn hóa và cùng tập test.</td></tr>
+<tr><td>Đánh giá</td><td>Token accuracy, ambiguity accuracy, CER/WER, OOV, coverage và tỷ lệ abstain; báo khoảng tin cậy và seed.</td></tr>
+<tr><td>Nhúng</td><td>Flash, RAM peak, latency p50/p95, mức tiêu thụ điện, năng lượng trên mẫu, so với E0/E1.</td></tr>
+<tr><td>Điều kiện nghiệm thu</td><td>Chỉ kết luận GRU tốt hơn Viterbi khi có cải thiện thống kê đáng tin trên test độc lập, không đổi lattice hoặc ràng buộc.</td></tr>
+</tbody></table>
+<p>Nếu cần điểm chuỗi toàn cục, mô hình GRU phải giải mã bằng beam/dynamic search với cách tính rõ ràng; không so sánh một baseline Viterbi tối ưu chuỗi với một accuracy độc lập rồi gọi là cùng bài toán.</p>
+</section>
+<section class="wrap-paper paper-section" id="lab"><div class="kicker">04 / REPRODUCIBLE TOY LAB</div>
+<h2>Kiểm tra được hai bất biến và một bước gradient</h2>
+<div class="paper-lab-grid">
+<div class="paper-lab">
+<h3>Base27 ↔ 3 trít (theo VF1)</h3>
+<p class="paper-small">Quy ước đúng theo <a href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">VF1.md</a>: SPACE=0; A=1; ...; Z=26. Không dùng quy ước A=0.</p>
+<label for="base27-input">CODE: chỉ A–Z hoặc SPACE</label>
+<input id="base27-input" type="text" maxlength="80" value="FAIZ" spellcheck="false" autocomplete="off" aria-describedby="base27-status">
+<pre id="base27-output" aria-live="polite"></pre>
+<p class="paper-small" id="base27-status">Toàn bộ phép đổi được chạy tại trình duyệt. Dữ liệu không gửi đi.</p>
+</div>
+<div class="paper-lab">
+<h3>Gradient descent hai ứng viên</h3>
+<p class="paper-small">Minh họa sigmoid/softmax của 2 ứng viên A (gold) và B. Đây không phải kết quả học GRU hoặc mẫu CVNSS4.0 mơ hồ thực tế.</p>
+<div class="paper-stats"><span>Bước: <b id="step">0</b></span><span>P(A): <b id="prob">0.5000</b></span><span>Loss: <b id="loss">0.6931</b></span></div>
+<div class="paper-meter" aria-label="Xác suất ứng viên đúng"><div id="meter"></div></div>
+<p class="paper-small">w = <span id="weight">0.0000</span>; p(A)=sigmoid(w); gradient dL/dw = p(A)−1; η=0.2.</p>
+<button type="button" id="train-one">+ 1 bước học</button> <button type="button" id="train-many">+ 50 bước</button> <button type="button" id="train-reset">Đặt lại</button>
+<p class="paper-small" id="gradient-assert" aria-live="polite"></p>
+</div>
+</div>
+</section>
+<section class="wrap-paper paper-section" id="protocol"><div class="kicker">05 / EDGE FIRMWARE &amp; VF1</div>
+<h2>Base27, ternary và triển khai ESP32-S3</h2>
+<p>Vì 27 = 3³, từng ký hiệu thuộc bảng VF1 có duy nhất ba trít cơ số 3. Điều này chứng minh ánh xạ hữu hạn song ánh, <strong>không chứng minh tự động khả năng nén dữ liệu hoặc MCU chạy lệnh ternary phần cứng</strong>.</p>
+<div class="paper-formula">v ∈ [0,26]
+t₀ = floor(v/9) ; t₁ = floor(v/3) mod 3 ; t₂ = v mod 3
+v = 9·t₀ + 3·t₁ + t₂
+0 ≤ t₀,t₁,t₂ ≤ 2, nên biểu diễn là duy nhất.</div>
+<p>ESP32-S3 là MCU nhị phân. Base27/trít là <strong>mã dữ liệu</strong>; suy luận GRU int8 hoặc ternary-weight là <strong>biểu diễn trọng số</strong> độc lập. Lựa chọn triển khai thực tế: huấn luyện GRU bên ngoài, đóng băng trọng số, kiểm tra golden vectors, lượng tử hóa và viết/port vòng suy luận C++ trên ESP-IDF. Dùng ternary weight + STE là nhánh thử nghiệm thứ hai, chỉ chấp nhận nếu chứng minh được trade-off accuracy–latency–RAM.</p>
+<table class="paper-table"><thead><tr><th>Lớp</th><th>Vai trò kiểm chứng</th></tr></thead><tbody>
+<tr><td>CVNSS4.0 v5 / native C++</td><td>Encode/decode, kiểm tra bất biến, đối chiếu kết quả JS ↔ C++ host.</td></tr>
+<tr><td>VF1 / Base27 / CRC32</td><td>Truyền CODE/TRITS/HEX/CRC, phát hiện sai lệch ngoài ý muốn, byte-exact nhờ HEX sidecar; cần xác thực bổ sung trong sản phẩm thực.</td></tr>
+<tr><td>BilaScript</td><td>Lớp diễn đạt thí nghiệm và workflow; frontend hiện biên dịch ra JavaScript, không tuyên bố chạy native trong ESP32-S3.</td></tr>
+<tr><td>C++, Java, Python, Swift</td><td>Kiểm tra tương thích truyền tải VF1; các client không được mặc định coi là thực thi bộ quy tắc CVNSS4.0 đầy đủ.</td></tr>
+<tr><td>ESP32-S3 / UART0 / Web Serial</td><td>Gửi lệnh và lấy log trực tiếp từ bo thật: input, code, candidates, prediction, latency, heap. Không trộn log CI host với số liệu thiết bị.</td></tr>
+</tbody></table>
+<p>Thứ tự chấp nhận: đặc tả → tests thuần thuật toán → baseline Viterbi → huấn luyện GRU → parity kết quả trên host → xuất weights → ESP-IDF build → đo trên bo thật → báo cáo có hash phiên bản và dữ liệu.</p>
+<div class="paper-actions"><a href="./native-lab.html">Native ESP32-S3 proof lab →</a><a href="./index.html#lab" class="secondary">Bộ tham chiếu VF1 →</a></div>
+</section>
+<section class="wrap-paper paper-section" id="reproduce"><div class="kicker">06 / REPRODUCIBILITY</div>
+<h2>Gói kiểm chứng &amp; tài liệu tham khảo</h2>
+<p>Mẫu corpus nghiên cứu đề nghị: mỗi câu chứa <code>tokens</code> có <code>code</code> (CVNSS4.0), <code>candidates</code> (Unicode hợp lệ), <code>gold</code> (Unicode chính xác). Sinh từ văn bản có quyền sử dụng; mọi cặp phải vượt kiểm chứng E(gold)=code. Khi báo kết quả, lưu phiên bản converter, loại tokenizer, seeds, commit, số mẫu và bảng test.</p>
+<div class="paper-formula"># Kiểm chứng gradient toán học không cần thư viện ngoài:
+python3 research/backprop/toy_gradient.py
+
+# Các bước thử nghiệm có thật sau khi chuẩn bị corpus:
+1. Tạo lattice theo converter v5 và kiểm tra E(gold)=code.
+2. Chạy canonical / n-gram Viterbi / GRU trên cùng split.
+3. Xuất JSON kết quả cùng mã nguồn, hyperparameters, seed.
+4. Tích hợp mô hình được lượng tử hóa và đo ESP32-S3.</div>
+<p><strong>Nguồn học thuật:</strong> Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1986), <a href="https://doi.org/10.1038/323533a0" target="_blank" rel="noopener">Learning representations by back-propagating errors</a>, Nature 323, 533–536. GRU: <a href="https://arxiv.org/abs/1406.1078" target="_blank" rel="noopener">Cho et al. (2014)</a>. CVNSS4.0: <a href="https://chuvietnhanh.sourceforge.net/GiaoTrinhChuVNSongSong.htm">Giáo trình Chữ Việt Song Song</a> và <a href="https://github.com/xulytiengviet/CVNSS4.0">bộ tham chiếu v5</a>. VF1: <a href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">đặc tả giao thức</a>.</p>
+<p class="paper-small">Trạng thái báo cáo tại thời điểm viết: thiết kế phương pháp và phép kiểm chứng toán học; không có dữ liệu độ chính xác GRU, mức cải thiện so Viterbi, hoặc phép đo neural decoder trên ESP32-S3 đã công bố. Mọi con số tiếp theo phải trích tới artifact tái lập.</p>
+</section>
+</main>
+<footer class="paper-foot"><div class="wrap-paper">ViFirmware Research · Long Ngo · 2026 · <a href="./index.html">Trở về ViFirmware</a> · <a href="https://github.com/xulytiengviet/vifirmware">Mã nguồn</a> · Không gán các kết quả chưa đo cho phần cứng.</div></footer>
+<script>
+(function(){
+"use strict";
+const q=id=>document.getElementById(id);
+function runBase27(){
+ const raw=q("base27-input").value,code=raw.toUpperCase();
+ if(!/^[A-Z ]{1,80}$/.test(code)){q("base27-output").textContent="LỖI: CODE chỉ gồm ASCII A–Z hoặc SPACE (1–80 ký tự).";return;}
+ const abc=" ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ const lines=[],parts=[];
+ for(const ch of code){
+  const v=abc.indexOf(ch),a=Math.floor(v/9),b=Math.floor(v/3)%3,c=v%3;
+  parts.push(""+a+b+c);lines.push((ch===" "?"SPACE":ch)+" = "+v+" → "+a+b+c);
+ }
+ const trits=parts.join("");let decoded="";
+ for(let i=0;i<trits.length;i+=3){decoded+=abc[Number(trits[i])*9+Number(trits[i+1])*3+Number(trits[i+2])];}
+ q("base27-output").textContent=lines.join("\n")+"\n\nTRITS: "+trits+"\nROUND-TRIP: "+(decoded===code?"PASS ✓":"FAIL")+"\nDECODE: "+JSON.stringify(decoded);
+}
+q("base27-input").addEventListener("input",runBase27);runBase27();
+let w=0,step=0;const sig=x=>1/(1+Math.exp(-x));
+function render(){const p=sig(w),loss=-Math.log(p);q("step").textContent=String(step);q("prob").textContent=p.toFixed(4);q("loss").textContent=loss.toFixed(4);q("weight").textContent=w.toFixed(4);q("meter").style.width=(p*100)+"%";}
+function train(n){let monotone=true;for(let i=0;i<n;i++){const before=-Math.log(sig(w));const gradient=sig(w)-1;w-=.2*gradient;step++;if(-Math.log(sig(w))>before+1e-12)monotone=false;}render();q("gradient-assert").textContent=monotone?"PASS: loss giảm qua "+n+" bước (trên ví dụ này).":"CẢNH BÁO: loss không giảm đơn điệu.";}
+q("train-one").addEventListener("click",()=>train(1));q("train-many").addEventListener("click",()=>train(50));q("train-reset").addEventListener("click",()=>{w=0;step=0;render();q("gradient-assert").textContent="Đã đặt lại; chưa chạy bước học.";});render();
+})();
+</script>
+</body></html>
