@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b10">
+<meta name="description" content="ViFirmware Native Lab: kiểm chứng CVNSS4.0 Unicode↔ASCII bằng C++ và ESP32-S3 qua mô phỏng tham chiếu, CI, Web Serial và log thiết bị thật.">
+<title>ViFirmware · Native ESP32-S3 Proof Lab</title>
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./native-lab.css">
+<script defer src="./assets/cvnss-converter.js"></script>
+<script defer src="./native-lab.js"></script>
+</head>
+<body>
+<a class="skip" href="#experiment">Đến khu thực nghiệm</a>
+<header class="bar"><div class="wrap top"><a href="./index.html" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>NATIVE CODEC · ESP32-S3 · LAB</small></span></a><nav aria-label="Điều hướng"><a href="#experiment">Thực nghiệm</a><a href="#evidence">Bằng chứng</a><a href="#method">Phương pháp</a><a href="#reproduce">Tái lập</a></nav><a class="gh" href="https://github.com/xulytiengviet/vifirmware" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
+<main>
+<section class="wrap proof-hero">
+ <div><div class="eyebrow"><span class="led"></span> EMBEDDED VIETNAMESE CODEC / REPRODUCIBLE RESEARCH</div>
+ <h1>Tiếng Việt Unicode.<br><em>Mã hóa ngay trên chip.</em></h1>
+ <p class="lead">Lõi CVNSS4.0 C++ dùng bộ quy tắc v5 và được đưa trực tiếp vào mã nguồn firmware ESP32-S3. Trang này giúp tự thử dữ liệu Unicode, xem giới hạn giải mã và — khi có board thật — gửi lệnh để đối chiếu kết quả.</p>
+ <div class="actions"><a class="cta" href="#experiment">Chạy mô phỏng →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/tree/main/native">Xem C++ codec ↗</a><a class="ghost" href="./embedded.html">Ưu / nhược triển khai ↗</a></div>
+ <div class="proof-warn"><strong>PHÂN BIỆT BẰNG CHỨNG:</strong> JavaScript trên trang chỉ mô phỏng kết quả tham chiếu. GitHub Actions chạy C++ độc lập trên máy chủ CI. Chỉ khi thiết bị thật trả log qua Web Serial và được đối chiếu mới có bằng chứng thực thi trên board. Không ghi log giả thành kết quả phần cứng.</div></div>
+ <div class="proof-diagram" aria-label="Pipeline độc lập">
+   <div class="diagram-top">~/ESP32-S3/CVNSS4.0 <span>ALGORITHM PORT</span></div>
+   <div class="d-node"><small>INPUT · USER BYTES</small><b>UTF-8 / Unicode tiếng Việt</b><span>Nhận trực tiếp từ UART0</span></div><div class="d-arrow">↓</div>
+   <div class="d-node engine"><small>ON DEVICE · NATIVE C++</small><b>NFC subset → CVNSS4.0 v5</b><span>1.094 rows · lexer · candidates</span></div><div class="d-arrow">↓</div>
+   <div class="d-node"><small>OUTPUT · DEVICE LOG</small><b>CVNSS4 → canonical CQN</b><span>Thời gian μs · heap nội · nhập nhằng</span></div>
+   <div class="diagram-foot">KHÔNG PYTHON / JS RUNTIME TRONG FIRMWARE</div>
+ </div>
+</section>
+<section class="wrap proof-metrics">
+ <div><small>BẢNG QUY TẮC</small><strong>1.094</strong><span>Được sinh từ converter v5</span></div>
+ <div><small>DIFFERENTIAL SAMPLES</small><strong>1.467</strong><span>Đối chiếu C++ host và JS</span></div>
+ <div><small>MISMATCHES (CI HOST)</small><strong>0</strong><span>Trong tập thử đã công bố</span></div>
+ <div><small>BOARD MEASUREMENTS</small><strong id="device-status-metric">—</strong><span id="metric-detail">Chưa có log thiết bị trong phiên</span></div>
+</section>
+<section class="wrap section" id="experiment">
+<div class="section-top"><span class="kicker">01 / INTERACTIVE PRE-FEASIBILITY</span><h2>Thử Unicode → CVNSS4.0 → Unicode</h2><p>Nhập tiếng Việt thật. Bộ tham chiếu JavaScript tạo kết quả kỳ vọng để đối chiếu với native C++ và thiết bị thật; không tạo chuỗi CVNSS4.0 giả cho firmware.</p></div>
+<div class="proof-lab">
+ <div class="lab-input">
+  <div class="pane-head"><span>USER INPUT / UTF-8</span><span class="online">● LOCAL REFERENCE</span></div>
+  <label for="proof-input">Chuỗi cần chuyển đổi</label>
+  <textarea id="proof-input" rows="4" spellcheck="false">Tôi yêu tiếng Việt</textarea>
+  <div class="sample-row"><button type="button" data-sample="Tôi yêu tiếng Việt">Câu tiếng Việt</button><button type="button" data-sample="nghiêng">Phụ âm ng</button><button type="button" data-sample="hoà">Vị trí dấu</button><button type="button" data-sample="ệ">NFD</button><button type="button" data-sample="sẽ">Thanh ngã</button></div>
+  <div class="command-row"><button id="simulate" type="button" class="main-button">▶ Mô phỏng tham chiếu</button><button id="copy-uart" type="button" class="outline-button">Sao chép lệnh UART</button></div>
+  <p class="microcopy">Dữ liệu nằm trong trình duyệt. NFC/NFD ở đây được xử lý bằng chuẩn hóa Unicode của trình duyệt, có phạm vi rộng hơn bộ NFC tiếng Việt rút gọn của firmware.</p>
+  <div class="pane-head device-head"><span>REAL DEVICE / OPTIONAL WEBSERIAL</span><span id="device-pill" class="pill-warn">CHƯA KẾT NỐI</span></div>
+  <div class="command-row"><button id="connect-serial" type="button" class="outline-button">Kết nối ESP32-S3</button><button id="send-serial" type="button" class="outline-button" disabled>Gửi Unicode qua UART</button><button id="disconnect-serial" type="button" class="outline-button" disabled>Ngắt</button></div>
+  <p class="microcopy" id="serial-support">Web Serial cần Chrome/Edge, HTTPS và bo mạch UART0 khả dụng. Chỉ thao tác theo yêu cầu người dùng; không tự kết nối.</p>
+ </div>
+ <div class="lab-output">
+  <div class="pane-head"><span>EXPECTED OUTPUT / JS V5 REFERENCE</span><span id="reference-status">SẴN SÀNG</span></div>
+  <div class="out-box"><small>UNICODE NFC</small><code id="out-nfc">—</code></div>
+  <div class="out-box"><small>CVNSS4.0 CODE (THUẬT TOÁN THAM CHIẾU)</small><code id="out-cvn">—</code></div>
+  <div class="out-box"><small>GIẢI MÃ CHUẨN TẮC (CÓ THỂ NHẬP NHẰNG)</small><code id="out-decoded">—</code></div>
+  <div class="out-box"><small>SO SÁNH ROUND-TRIP NFC</small><strong id="out-equal">—</strong></div>
+  <div class="out-box"><small>SỐ ỨNG VIÊN / NHẬP NHẰNG</small><code id="out-ambiguity">—</code></div>
+  <div class="out-box"><small>CHI PHÍ BIỂU DIỄN</small><code id="out-bytes">—</code></div>
+  <p class="microcopy">Khớp trên một câu ≠ khớp mọi chuỗi. Codec canonical có 56 nhóm nhập nhằng theo dữ liệu v5; byte-exact cần thông tin bổ sung.</p>
+ </div>
+</div>
+<div class="console-grid">
+<div class="console-box"><div class="pane-head"><span>SIMULATED LOG / NOT DEVICE</span><button type="button" id="clear-sim" class="plain-btn">Xóa</button></div><pre id="sim-log" aria-live="polite">[SIM/JS] Chưa chạy thử nghiệm.</pre></div>
+<div class="console-box"><div class="pane-head"><span>ACTUAL BOARD SERIAL LOG</span><button type="button" id="export-log" class="plain-btn">Xuất log JSON</button></div><pre id="device-log" aria-live="polite">[DEVICE] Chưa nhận dữ liệu phần cứng.</pre><p id="board-comparison" class="board-proof">Chưa có bằng chứng đối chiếu từ bo mạch thật trong phiên này.</p></div>
+</div>
+</section>
+<section class="wrap section" id="evidence">
+<div class="section-top"><span class="kicker">02 / EVIDENCE LADDER</span><h2>Ba lớp chứng minh — không đánh đồng</h2></div>
+<div class="proof-steps">
+<article><small>LAYER 01 · REFERENCE</small><h3>Converter JavaScript</h3><p>Chạy trong trang để xác định expected output, NFC, decode canonical và ứng viên. Đây là mô phỏng, không phải MCU.</p><span>ĐÃ CÓ MÃ VÀ TEST</span></article>
+<article><small>LAYER 02 · NATIVE HOST</small><h3>C++ độc lập, cùng core firmware</h3><p>CI biên dịch C++ và đối chiếu 1.467 chuỗi encode/decode, 12 ca inspect. Không dùng converter JS để tính bên trong native.</p><a href="https://github.com/xulytiengviet/vifirmware/actions/workflows/native.yml">XEM WORKFLOW ↗</a></article>
+<article><small>LAYER 03 · XTENSA / BOARD</small><h3>ESP-IDF binary → UART thật</h3><p>Workflow riêng biên dịch firmware cho ESP32-S3. Cần thêm flash thực, UART log và phép đo heap/timing mới chứng minh on-device.</p><a href="https://github.com/xulytiengviet/vifirmware/actions/workflows/esp-idf.yml">XEM CROSS-BUILD ↗</a></article>
+</div>
+</section>
+<section class="wrap section" id="method">
+<div class="section-top"><span class="kicker">03 / SCIENTIFIC SCOPE</span><h2>Đã giải quyết gì? Chưa thể kết luận gì?</h2></div>
+<div class="methods">
+<div><h3>Đã chứng minh trên host</h3><p>C++ hoạt động không cần JS runtime, tạo mã CVNSS4.0 trực tiếp từ UTF-8, giải mã theo chính sách canonical của v5 và vượt qua kiểm tra dữ liệu tiếng Việt đã chọn.</p></div>
+<div><h3>Đã giải quyết đầu vào firmware về mặt mã nguồn</h3><p>Mã ESP-IDF nhận dòng <code>ENC &lt;Unicode&gt;</code> qua UART0, gọi chính core native, rồi ghi kết quả và đo thời gian. Không tồn tại chuỗi CVNSS4.0 được tính sẵn trong luồng ENC.</p></div>
+<div><h3>Giới hạn Unicode</h3><p>Firmware hỗ trợ NFC rút gọn cho các tổ hợp nguyên âm và dấu tiếng Việt; không phải Unicode normalization toàn hệ sinh thái như ICU. Input tối đa 1.024 byte.</p></div>
+<div><h3>Giới hạn mã hóa</h3><p>Nhiều mã CVNSS4.0 có nhiều CQN ứng viên. Decode chuẩn tắc không có cơ sở để luôn khôi phục chính xác bản gốc. Tính byte-exact phải thông qua chế độ escape hoặc metadata.</p></div>
+</div>
+</section>
+<section class="wrap section" id="reproduce">
+<div class="section-top"><span class="kicker">04 / REPRODUCE ON YOUR MACHINE</span><h2>Chạy được, đo được, phản biện được</h2></div>
+<div class="code-card"><div class="pane-head"><span>BUILD HOST / ESP-IDF</span><a href="https://github.com/xulytiengviet/vifirmware/blob/main/firmware/esp32s3/README.md" target="_blank" rel="noopener noreferrer">Hướng dẫn đầy đủ ↗</a></div><pre>git clone https://github.com/xulytiengviet/vifirmware.git
+cd vifirmware
+node tools/gen_native_tables.cjs
+mkdir -p build
+g++ -std=c++17 -O2 -I native/include native/src/cvnss_codec.cpp native/src/cvnss_cli.cpp -o build/cvnss_native
+./build/cvnss_native encode "Tôi yêu tiếng Việt"
+node tools/native-parity.cjs
+
+# Có ESP-IDF 5.5 và ESP32-S3 thực:
+cd firmware/esp32s3
+idf.py set-target esp32s3
+idf.py build
+idf.py -p COM5 flash monitor
+# Qua UART0 115200: ENC Tôi yêu tiếng Việt</pre></div>
+<div class="actions"><a class="cta" href="https://github.com/xulytiengviet/vifirmware/tree/main/native">Xem lõi C++ →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions">Xem GitHub Actions ↗</a></div>
+</section>
+</main>
+<footer><div class="wrap foot"><span>ViFirmware · Native Proof Lab · 2026</span><span>Thuật toán: CVNSS4.0 v5 · Phần mềm & nghiên cứu: Long Ngo</span></div></footer>
+</body></html>
