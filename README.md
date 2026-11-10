@@ -14,8 +14,8 @@
 ## Quickstart
 
 ```bash
-python3 portable/python/vifirmware.py encode "XIN CHAO" "Xin chào"
-python3 portable/python/vifirmware.py decode 'VF1|XIN CHAO|...'
+python3 portable/python/vifirmware.py encode "TOIY" "tôi"
+python3 portable/python/vifirmware.py decode 'VF1|TOIY|...'
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 node --test tests/*.test.cjs
 ```
