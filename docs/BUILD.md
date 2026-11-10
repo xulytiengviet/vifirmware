@@ -57,3 +57,13 @@ idf.py -p COM5 flash monitor
 \`\`\`
 
 Replace COM5 with the actual serial port. Do not claim measured hardware performance until real flash logs and a successful binary build have been recorded.
+
+## Full CVNSS4.0 native-port readiness
+
+Trang đánh giá: [embedded.html](embedded.html) · Báo cáo chuyên sâu: [FULL_CODEC_ESP32S3.md](FULL_CODEC_ESP32S3.md).
+
+Để công bố "full codec trên ESP32-S3", cần encoder và decoder thực thi trên MCU; bộ firmware mẫu hiện tại mới vận chuyển mã tính sẵn. Kiểm thử hiện hành của CI chỉ xác nhận các client VF1 và converter tham chiếu JS; không chứng minh hiệu năng firmware.
+
+## Generate reference vectors for a future C/C++ full-codec port
+
+Run `node tools/export_reference_vectors.cjs > golden-reference.json`. The vectors come from the official JavaScript converter and expose canonical differences and candidates; this does **not** test a native MCU encoder or prove universal losslessness. Keep the generated file next to native-port comparison logs.

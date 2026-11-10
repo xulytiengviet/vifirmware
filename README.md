@@ -58,3 +58,12 @@ Go to **Settings → Pages → Build and deployment → Deploy from a branch →
 ## Embedded reference
 
 A minimal on-device VF1 self-check using a **precomputed** CVNSS4.0 vector is in [`firmware/esp32s3/`](firmware/esp32s3/). This has not been board-verified and does not implement the full linguistic CVNSS4.0 decoder on an MCU.
+
+## Đánh giá đưa toàn bộ CVNSS4.0 lên ESP32-S3
+
+- [Trang đánh giá ưu/nhược, lựa chọn kiến trúc và cổng nghiệm thu](docs/embedded.html)
+- [Báo cáo kỹ thuật full codec ESP32-S3](docs/FULL_CODEC_ESP32S3.md)
+
+**Phân biệt:** hiện có firmware VF1 dùng code CVNSS4.0 tính sẵn; **chưa** có full encoder/decoder CVNSS4.0 chạy trên MCU, không có kết quả Flash/RAM/latency đo trên ESP32-S3. Giải mã canonical CVNSS4.0 không bảo đảm khôi phục mọi CQN do có nhóm nhập nhằng.
+
+Khuyến nghị: cổng phát hành dựa trên parity với converter v5 → xuất golden corpus → core C++ sinh bảng tĩnh Flash → build/flash ESP32-S3 → đo bộ nhớ/độ trễ → fuzz/OTA. BilaScript v4 là frontend biên dịch JavaScript, **không** phải compiler native Xtensa.

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b0d">
+<meta name="description" content="Phân tích ưu nhược điểm đưa full CVNSS4.0 codec lên firmware ESP32-S3: kiến trúc, RAM, Flash, Unicode, nhập nhằng, đo kiểm và roadmap nghiên cứu.">
+<title>ViFirmware · Full CVNSS4.0 trên ESP32-S3</title>
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./embedded.css">
+<script defer src="./assets/cvnss-converter.js"></script>
+<script defer src="./embedded.js"></script>
+</head>
+<body>
+<a href="#content" class="skip">Đến nội dung</a>
+<header class="bar"><div class="wrap top"><a href="./index.html" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>EMBEDDED RESEARCH / ESP32-S3</small></span></a><nav aria-label="Điều hướng"><a href="#tradeoffs">Ưu · nhược</a><a href="#solutions">Chiến lược</a><a href="#gates">Nghiệm thu</a><a href="#references">Nguồn</a></nav><a href="./index.html" class="gh">← Trang chính</a></div></header>
+<main id="content">
+<section class="wrap embed-hero">
+  <div><div class="eyebrow"><span class="led"></span> FULL CODEC PORT / ARCHITECTURAL EVALUATION</div>
+  <h1>CVNSS4.0 ở cấp<br><em>Firmware</em><span class="caret">_</span></h1>
+  <p class="lead">Đưa <b>toàn bộ quy tắc CVNSS4.0</b> sang C/C++ chạy trực tiếp trên ESP32-S3: liệu có nhanh, nhẹ, offline và đáng triển khai? Đánh giá công khai những lợi ích có thể đạt, điểm yếu kỹ thuật và bằng chứng còn thiếu.</p>
+  <div class="actions"><a class="cta" href="#tradeoffs">Xem đánh giá ưu–nhược →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/FULL_CODEC_ESP32S3.md">Bản nghiên cứu chi tiết ↗</a></div>
+  <p class="readiness"><span class="readiness-dot"></span> TRẠNG THÁI THỰC: <strong>CHƯA XÁC MINH FULL CODEC CHẠY TRÊN BOARD</strong></p></div>
+  <div class="embed-visual" aria-label="Sơ đồ kiến trúc firmware mục tiêu">
+    <div class="visual-head"><span class="dots">● ● ●</span> ESP32-S3 / SYSTEM LAYERS <span>PROPOSED</span></div>
+    <div class="visual-body"><div class="v-step"><small>INPUT</small><b>UTF-8 + Unicode NFC</b><span>Kiểm tra UTF-8 · chuẩn hóa / hợp đồng NFC</span></div><div class="v-arrow">↓</div>
+      <div class="v-step accent"><small>FULL CVNSS4.0 ON DEVICE</small><b>Lexer → rules → candidate graph</b><span>52 quy tắc · chính sách nhập nhằng · forward / reverse</span></div><div class="v-arrow">↓</div>
+      <div class="v-step"><small>EMBEDDED TRANSPORT</small><b>ASCII → Base27 → optional VF1</b><span>CRC, escape, framing; tính byte thực tế</span></div><div class="v-arrow">↓</div>
+      <div class="v-step"><small>MCU / ESP-IDF</small><b>UART · BLE · Wi-Fi · GPIO</b><span>Xtensa LX7 / Flash / SRAM / PSRAM tùy board</span></div></div>
+    <div class="visual-foot">BilaScript v4 → JavaScript (host tooling) · Không có native C++ backend đã chứng minh</div>
+  </div>
+</section>
+<section class="wrap metrics embedded-metrics" aria-label="Giới hạn cơ sở">
+  <div><small>CPU</small><strong>240 <i>MHz</i></strong><span>Tần số tối đa của chip, không phải benchmark codec</span></div>
+  <div><small>SRAM NỘI</small><strong>512 <i>KB</i></strong><span>Tổng dung lượng; không phải heap rảnh</span></div>
+  <div><small>AMBIGUITY</small><strong id="cvn-ambiguity">—</strong><span>Nhóm nhập nhằng do converter v5 báo cáo</span></div>
+  <div><small>REFERENCE TEST</small><strong id="cvn-selftest">—</strong><span>Self-test JavaScript, không phải test trên chip</span></div>
+</section>
+
+<section class="wrap section" id="boundary">
+ <div class="section-top"><span class="kicker">01 / SCIENTIFIC BOUNDARY</span><h2>Thế nào mới thực sự là “full codec”?</h2><p>Không đánh đồng chương trình thử CRC với bộ chuyển đổi ngôn ngữ. Firmware chỉ đạt mục tiêu khi ESP32-S3 tự thực hiện CQN ↔ CVNSS4.0, không nhận sẵn mã ASCII đã tính từ máy chủ.</p></div>
+ <div class="compare-cards">
+  <article class="comparison current"><span>HIỆN TẠI · CÓ MÃ NGUỒN</span><h3>VF1 + một vector tính sẵn</h3><p>ESP-IDF demo dùng <code>tôi → TOIY</code> và tạo/kiểm tra trits, CRC32, dữ liệu gốc. Chưa có log flash board được kiểm chứng.</p><div class="barline"><span>Full encoder/decoder</span><b>Chưa</b></div></article>
+  <article class="comparison proposed"><span>MỤC TIÊU · CHƯA NGHIỆM THU</span><h3>Native CVNSS4.0 core</h3><p>Parser UTF-8, quy tắc âm tiết, bảng ánh xạ, ứng viên giải mã, xử lý ngoại lệ, profile strict/canonical/lossless và kiểm thử với bộ JS gốc.</p><div class="barline"><span>Biên dịch & đo trên MCU</span><b>Chưa</b></div></article>
+ </div>
+ <div class="equation"><code>D(E(s)) = s</code><span>Chỉ khẳng định cho miền mã đơn trị đã được chứng minh, hoặc khi có metadata/escape đủ để khôi phục. Giải mã chuẩn tắc từ mã nhiều-một không bảo đảm round-trip toàn phần.</span></div>
+</section>
+
+<section class="wrap section" id="tradeoffs">
+<div class="section-top"><span class="kicker">02 / ENGINEERING TRADE-OFFS</span><h2>Ưu điểm và nhược điểm</h2><p>Đánh giá định tính dựa trên đặc tính MCU và thiết kế converter, không phải kết quả đo trên board.</p></div>
+<div class="trade-grid">
+ <article class="trade-card positive"><h3><span class="trade-icon">+</span> Ưu điểm tiềm năng</h3><ul>
+   <li><b>Offline, riêng tư:</b> xử lý văn bản tại thiết bị, không cần server cho mỗi phép chuyển đổi</li>
+   <li><b>Trễ dự đoán được:</b> không phải chờ mạng; phù hợp command nhỏ và thao tác thời gian gần thực</li>
+   <li><b>Bảng hằng trong Flash:</b> tránh nạp toàn bộ dữ liệu ánh xạ vào heap nếu thiết kế đúng</li>
+   <li><b>UART/BLE dễ debug:</b> dạng ASCII thuận tiện với một số giao thức và nhật ký hệ thống</li>
+   <li><b>Tái sử dụng core:</b> cùng mã C/C++ có thể test trên PC rồi biên dịch ESP-IDF</li>
+   <li><b>Tính chủ động:</b> hoạt động khi mất kết nối và có thể giữ nguyên bản offline</li>
+ </ul></article>
+ <article class="trade-card negative"><h3><span class="trade-icon">−</span> Nhược điểm / rủi ro</h3><ul>
+   <li><b>56 nhóm nhập nhằng:</b> giải mã canonical không thể bảo đảm mọi chuỗi khôi phục nguyên dạng</li>
+   <li><b>Unicode không đơn giản:</b> NFC/NFD, dấu tổ hợp, chữ hoa và token ngoại ngữ cần hợp đồng rõ</li>
+   <li><b>SRAM hạn chế:</b> chỉ 512 KB nội cho cả hệ thống; bảng, buffer và tác vụ tranh chấp tài nguyên</li>
+   <li><b>Flash/OTA:</b> tăng kích thước binary; phải tính phân vùng cập nhật và phiên bản quy tắc</li>
+   <li><b>CPU và năng lượng:</b> candidate search và chuẩn hóa có chi phí, cần đo p95/µs trên board</li>
+   <li><b>Không tự nén:</b> VF1 giữ raw sidecar làm khung lớn hơn; 3 trít không tạo CPU tam phân</li>
+ </ul></article>
+</div>
+</section>
+
+<section class="wrap section" id="solutions">
+ <div class="section-top"><span class="kicker">03 / DEPLOYMENT CHOICES</span><h2>Chọn kiến trúc theo mục tiêu</h2><p>Thay đổi chiến lược để xem lợi/hại. Đây là lựa chọn thiết kế, không phải benchmark hoặc điểm số hiệu năng.</p></div>
+ <div class="selector"><div class="selector-tabs" role="tablist" aria-label="Chiến lược triển khai">
+ <button type="button" data-strategy="native" class="active" role="tab" aria-selected="true">A · Native C/C++</button>
+ <button type="button" data-strategy="hybrid" role="tab" aria-selected="false">B · Hybrid host</button>
+ <button type="button" data-strategy="js" role="tab" aria-selected="false">C · JS runtime MCU</button></div>
+ <div class="strategy-body" role="tabpanel" aria-live="polite">
+ <div><div id="strategy-label" class="eyebrow">KHUYẾN NGHỊ / FULL CODEC</div><h3 id="strategy-title">C/C++ + bảng sinh từ converter</h3><p id="strategy-body">Sinh bảng static, parser bounded và candidate graph; đối chứng JS và flash ESP32-S3.</p></div>
+ <dl><div><dt>Khả năng offline</dt><dd id="strategy-offline">Có</dd></div><div><dt>Rủi ro tài nguyên</dt><dd id="strategy-memory">Có thể kiểm soát, phải đo</dd></div><div><dt>Đủ định nghĩa “full codec”?</dt><dd id="strategy-full">Chỉ sau khi hoàn tất và kiểm thử parity</dd></div><div><dt>Nhược điểm chính</dt><dd id="strategy-risk">Chi phí port, Unicode và đảm bảo phiên bản</dd></div></dl>
+ </div></div>
+ <p class="notice-line">BilaScript v4 chỉ có backend JavaScript đã công bố. Muốn dùng BilaScript để tạo firmware native phải phát triển và xác thực backend mới, không suy ra từ khả năng viết thử C++/Java/Python/Swift của VF1.</p>
+</section>
+
+<section class="wrap section" id="gates">
+ <div class="section-top"><span class="kicker">04 / REPRODUCIBLE VALIDATION</span><h2>Cổng nghiệm thu: từ mô phỏng tới phần cứng</h2><p>Tích chọn để <b>mô phỏng tiến độ kế hoạch cá nhân</b>. Các ô chọn không thay đổi trạng thái kỹ thuật của repository và không xác nhận nghiệm thu thực tế.</p></div>
+ <div class="gate-panel">
+ <div class="gate-head"><strong id="gates-count">0/8 hạng mục đã đánh dấu</strong><button type="button" id="gates-reset">Đặt lại</button></div>
+ <div class="gate-track"><div id="gates-progress"></div></div>
+ <div class="gate-list">
+  <label><input type="checkbox" data-gate><span><b>G0 · Freeze rules</b><small>Ghim SHA v5, dữ liệu, cách sinh bảng và phiên bản Unicode</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G1 · Native parity</b><small>C/C++ encoder/decoder/candidates đối chứng JS trên golden vectors</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G2 · Ambiguity audit</b><small>Không va chạm âm thầm; strict/canonical/escape được định nghĩa</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G3 · Firmware binary</b><small>Có .bin thật, map file, kích thước phân vùng và config ESP-IDF</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G4 · Flash & UART</b><small>Ghi log bo mạch, phiên bản binary, kết quả kiểm thử trên thiết bị</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G5 · Resource benchmark</b><small>Free/min heap, Flash, p50/p95, KiB/s và cấu hình thử nghiệm</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G6 · Error & fuzzing</b><small>Malformed UTF-8, kích thước tối đa, input lạ, watchdog, reset</small></span></label>
+  <label><input type="checkbox" data-gate><span><b>G7 · OTA & stability</b><small>Firmware signing/rollback, log nhiều ngày, theo dõi lỗi</small></span></label>
+ </div></div>
+ <div class="notice-line"><strong>Hiện trạng công khai:</strong> Mã VF1 và self-test tham chiếu đã có; demo ESP-IDF chưa phải full codec. Trạng thái thực tế không được lấy từ các ô chọn mô phỏng này.</div>
+</section>
+
+<section class="wrap section" id="bench">
+ <div class="section-top"><span class="kicker">05 / BENCHMARK CONTRACT</span><h2>Đo gì trước khi công bố tốt hơn?</h2></div>
+ <div class="bench-table"><table>
+ <thead><tr><th>Nhóm</th><th>Chỉ số cần báo cáo</th><th>Điều kiện bắt buộc</th></tr></thead>
+ <tbody>
+ <tr><td>Đúng đắn</td><td>Round-trip miền hỗ trợ; số collision/candidates; exact vs canonical</td><td>Đối chứng nguồn gốc JS cùng version</td></tr>
+ <tr><td>Hiệu năng</td><td>µs/âm tiết, KiB/s, p50/p95/p99</td><td>Cùng board, cùng input, có số lần chạy</td></tr>
+ <tr><td>RAM / Flash</td><td>Free/min heap, .rodata, .text, binary bytes</td><td>Ghi rõ PSRAM/Flash thực và partition</td></tr>
+ <tr><td>Truyền dữ liệu</td><td>UTF-8 NFC, ASCII CVNSS4.0, VF1, sau nén</td><td>Đếm byte thực, không đánh đồng trit và bit</td></tr>
+ <tr><td>Ổn định & an toàn</td><td>Lỗi parser, watchdog, tính toàn vẹn, power cycle</td><td>Giới hạn input, fuzz, OTA và khôi phục</td></tr>
+ </tbody></table></div>
+</section>
+<section class="wrap section" id="references"><div class="section-top"><span class="kicker">06 / SOURCE EVIDENCE</span><h2>Nguồn và hồ sơ thực nghiệm</h2><p>Các nhận định phần cứng dựa trên tài liệu Espressif; phân tích codec bám theo converter audit-safe hiện có.</p></div>
+<div class="reference-links">
+<a href="https://github.com/xulytiengviet/vifirmware/tree/main/firmware/esp32s3">Mã firmware tham chiếu ↗</a>
+<a href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/FULL_CODEC_ESP32S3.md">Bản đánh giá chi tiết ↗</a>
+<a href="https://github.com/xulytiengviet/CVNSS4.0">CVNSS4.0 v5 ↗</a>
+<a href="https://www.espressif.com/en/products/socs/esp32-s3">ESP32-S3 — Espressif ↗</a>
+<a href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/partition-tables.html">ESP-IDF Partition Tables ↗</a>
+</div>
+<div class="actions"><a class="cta" href="./index.html#lab">Quay lại thí nghiệm CVNSS4.0 →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions">Xem CI GitHub ↗</a></div>
+</section>
+</main>
+<footer><div class="wrap foot"><span>ViFirmware · CVNSS4.0 Embedded Feasibility · 2026</span><span>Long Ngo · Đánh giá thiết kế, không phải chứng nhận phần cứng</span></div></footer>
+</body></html>

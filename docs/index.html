@@ -15,7 +15,7 @@
 <a class="skip" href="#lab">Chuyển đến phòng thí nghiệm</a>
 <header class="bar"><div class="wrap top">
 <a href="#home" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>CVNSS4.0 / EMBEDDED LAB</small></span></a>
-<nav aria-label="Điều hướng"><a href="#architecture">Kiến trúc</a><a href="#lab">Thử nghiệm</a><a href="#languages">4 ngôn ngữ</a><a href="#science">Kiểm chứng</a></nav>
+<nav aria-label="Điều hướng"><a href="#architecture">Kiến trúc</a><a href="#lab">Thử nghiệm</a><a href="#languages">4 ngôn ngữ</a><a href="#science">Kiểm chứng</a><a href="#evaluation">ESP32-S3 · Ưu/nhược</a></nav>
 <a class="gh" href="https://github.com/xulytiengviet/vifirmware" rel="noopener noreferrer" target="_blank">GitHub ↗</a>
 </div></header>
 <main id="home">
@@ -24,7 +24,7 @@
 <div class="eyebrow"><span class="led"></span> OPEN RESEARCH · VERSIONED · OFFLINE-FIRST</div>
 <h1>Từ <em>chữ Việt</em> đến<br><strong>phần mềm nhúng<span class="caret">_</span></strong></h1>
 <p class="lead">Đặc tả hình thức CVNSS4.0, xác minh tính đúng đắn và xây dựng giao thức truyền dữ liệu thử nghiệm cho <b>ESP32-S3</b>. BilaScript làm lớp diễn đạt; C++, Java, Python, Swift kiểm tra tính tương thích truyền tải.</p>
-<div class="actions"><a class="cta" href="#lab">Chạy kiểm chứng trực tiếp →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">Đọc đặc tả VF1 ↗</a></div>
+<div class="actions"><a class="cta" href="#lab">Chạy kiểm chứng trực tiếp →</a><a class="ghost" href="./embedded.html">Đánh giá full codec ESP32-S3 ↗</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">Đọc đặc tả VF1 ↗</a></div>
 <div class="warning"><b>RESEARCH NOTICE</b> Đây là nguyên mẫu phần mềm và demo trình duyệt. Chưa có kết quả flash firmware lên ESP32-S3, bitstream FPGA, ISA tam phân vật lý hay chứng minh CVNSS4.0 tự giải mã 100% trong mọi trường hợp.</div>
 </div>
 <div class="monitor" aria-label="Sơ đồ đường ống dữ liệu">
@@ -102,6 +102,17 @@ idf.py set-target esp32s3
 idf.py build
 idf.py -p COM5 flash monitor</pre></div>
 <p class="languages-note">Bước kế tiếp để xác nhận khả năng nhúng: build .bin, flash lên ESP32-S3, lưu UART log, ghi thời gian thực thi, heap, kích thước firmware và tỷ lệ PASS. Ví dụ chưa tích hợp toàn bộ quy tắc chuyển đổi CVNSS4.0 vào thiết bị.</p>
+</section>
+<section class="wrap section" id="evaluation">
+<div class="section-top"><span class="kicker">07 / FULL CODEC FEASIBILITY</span>
+<h2>Đưa toàn bộ CVNSS4.0 lên ESP32-S3: lợi và hại?</h2>
+<p>Mục tiêu là để vi điều khiển tự chuyển đổi CQN ↔ CVNSS4.0, thay vì chỉ nhận mã <code>TOIY</code> tính sẵn. Việc chuyển thành phần mềm firmware có thể hữu ích cho IoT offline, nhưng cần đánh giá đầy đủ nhập nhằng, Unicode, RAM/Flash và mức tiêu thụ tài nguyên.</p></div>
+<div class="three">
+<article><span class="num">LỢI ÍCH / POTENTIAL</span><h3>Offline · kiểm soát dữ liệu</h3><p>Xử lý tiếng Việt tại chỗ; có thể giảm phụ thuộc kết nối và thuận lợi khi truyền lệnh ASCII ngắn.</p><code>UART / BLE / Wi-Fi / local processing</code></article>
+<article><span class="num">CHI PHÍ / BOTTLENECKS</span><h3>512 KB SRAM và Unicode</h3><p>SRAM nội 512 KB là tổng toàn chip, không phải RAM dành riêng cho codec. Còn phải xử lý NFC, dấu tổ hợp và nhập nhằng giải mã.</p><code>Flash / heap / Unicode / candidates</code></article>
+<article><span class="num">GIỚI HẠN / SCIENCE</span><h3>Chưa đạt full codec trên chip</h3><p>Mã ESP-IDF hiện tại kiểm tra khung VF1 với một vector mã tính sẵn. Chưa có bản port full encoder/decoder và log flash board.</p><code>G0…G7 / golden tests / on-device logs</code></article>
+</div>
+<div class="actions"><a class="cta" href="./embedded.html">Xem phân tích + ma trận lựa chọn →</a><a class="ghost" href="./FULL_CODEC_ESP32S3.md">Đọc đánh giá kỹ thuật đầy đủ ↗</a></div>
 </section>
 <section class="wrap section" id="references">
 <div class="section-top"><span class="kicker">05 / REFERENCES</span><h2>Nguồn gốc & trách nhiệm nghiên cứu</h2></div>

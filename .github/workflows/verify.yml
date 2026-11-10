@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-java@v4
         with: {distribution: 'temurin', java-version: '17'}
       - name: Node reference and upstream converter
-        run: node --test tests/frame.test.cjs
+        run: node --test tests/*.test.cjs
       - name: Compile and run actual BilaScript v4 sample
         shell: bash
         run: |
@@ -26,6 +26,10 @@ jobs:
           node /tmp/bilascript/v4/bin/bila.js compile examples/bridge.bila -o /tmp/bridge.js
           node /tmp/bridge.js > /tmp/bila-output
           grep -Fx true /tmp/bila-output
+      - name: Generate CVNSS4.0 golden reference vectors (host only)
+        run: |
+          node tools/export_reference_vectors.cjs > /tmp/cvnss-reference.json
+          python -c "import json; d=json.load(open('/tmp/cvnss-reference.json')); assert d['version']=='5.0.0-audit-safe' and d['audit']['ambiguityGroups']==56 and len(d['vectors'])>=15"
       - name: Python tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Compile C++17 and Java
