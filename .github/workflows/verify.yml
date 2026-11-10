@@ -36,13 +36,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python portable/python/vifirmware.py encode "XIN CHAO" "Xin chào" > /tmp/py
-          /tmp/vf_cpp encode "XIN CHAO" "Xin chào" > /tmp/cpp
-          java -cp portable/java ViFirmware encode "XIN CHAO" "Xin chào" > /tmp/java
+          python portable/python/vifirmware.py encode "TOIY" "tôi" > /tmp/py
+          /tmp/vf_cpp encode "TOIY" "tôi" > /tmp/cpp
+          java -cp portable/java ViFirmware encode "TOIY" "tôi" > /tmp/java
           cmp /tmp/py /tmp/cpp
           cmp /tmp/py /tmp/java
           FRAME="$(cat /tmp/py)"
-          printf 'Xin chào' > /tmp/raw
+          printf 'tôi' > /tmp/raw
           /tmp/vf_cpp decode "$FRAME" > /tmp/raw_cpp
           java -cp portable/java ViFirmware decode "$FRAME" > /tmp/raw_java
           cmp /tmp/raw /tmp/raw_cpp
@@ -59,11 +59,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 portable/python/vifirmware.py encode "XIN CHAO" "Xin chào" > /tmp/py
-          /tmp/vf_swift encode "XIN CHAO" "Xin chào" > /tmp/swift
+          python3 portable/python/vifirmware.py encode "TOIY" "tôi" > /tmp/py
+          /tmp/vf_swift encode "TOIY" "tôi" > /tmp/swift
           cmp /tmp/py /tmp/swift
           FRAME="$(cat /tmp/py)"
-          printf 'Xin chào' > /tmp/raw
+          printf 'tôi' > /tmp/raw
           /tmp/vf_swift decode "$FRAME" > /tmp/raw_swift
           cmp /tmp/raw /tmp/raw_swift
           echo "PASS: Swift / Python VF1 exact parity"
