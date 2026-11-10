@@ -29,7 +29,7 @@ jobs:
         run: |
           set -euo pipefail
           find firmware/esp32s3/build -maxdepth 1 -type f -name '*.bin' -print
-          find firmware/esp32s3/build -maxdepth 1 -type f -name '*.bin' -exec sha256sum {} \; > firmware/esp32s3/build/firmware-sha256.txt
+          find firmware/esp32s3/build -maxdepth 1 -type f -name '*.bin' -exec sha256sum {} \; > firmware-sha256.txt
           test -f firmware/esp32s3/build/vifirmware_esp32s3.bin
           ls -lh firmware/esp32s3/build/*.bin
       - uses: actions/upload-artifact@v4
@@ -37,6 +37,6 @@ jobs:
           name: esp32s3-native-cvnss-unflashed-binaries
           path: |
             firmware/esp32s3/build/*.bin
-            firmware/esp32s3/build/firmware-sha256.txt
+            firmware-sha256.txt
             firmware/esp32s3/build/*.map
           if-no-files-found: error
