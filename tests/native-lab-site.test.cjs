@@ -29,7 +29,7 @@ test("Firmware receives user Unicode and really runs native algorithms (no cache
 });
 test("Physical board proof is not simulated or automatically asserted",()=>{
   const js=read("docs/native-lab.js");
-  assert.match(js,/navigator\.serial\.requestPort/);
+  assert.match(js,/navigator\.serial\?\.requestPort/);
   assert.match(js,/new TextEncoder/);
   assert.match(js,/receivedCode/);
   assert.match(js,/verifiedCases/);
