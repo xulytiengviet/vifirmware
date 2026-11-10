@@ -154,6 +154,7 @@ python3 research/backprop/toy_gradient.py
 2. Chạy canonical / n-gram Viterbi / GRU trên cùng split.
 3. Xuất JSON kết quả cùng mã nguồn, hyperparameters, seed.
 4. Tích hợp mô hình được lượng tử hóa và đo ESP32-S3.</div>
+<p><strong>Script host có thể chạy khi có corpus thật:</strong> <a href="https://github.com/xulytiengviet/vifirmware/blob/main/research/backprop/benchmark.py">benchmark.py — GRU nhỏ so với Viterbi</a>. Script chỉ kiểm tra định dạng/NFC; việc xác minh E(candidate)=CODE cần chạy converter v5 độc lập theo giao thức nghiên cứu.</p>
 <p><strong>Nguồn học thuật:</strong> Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1986), <a href="https://doi.org/10.1038/323533a0" target="_blank" rel="noopener">Learning representations by back-propagating errors</a>, Nature 323, 533–536. GRU: <a href="https://arxiv.org/abs/1406.1078" target="_blank" rel="noopener">Cho et al. (2014)</a>. CVNSS4.0: <a href="https://chuvietnhanh.sourceforge.net/GiaoTrinhChuVNSongSong.htm">Giáo trình Chữ Việt Song Song</a> và <a href="https://github.com/xulytiengviet/CVNSS4.0">bộ tham chiếu v5</a>. VF1: <a href="https://github.com/xulytiengviet/vifirmware/blob/main/spec/VF1.md">đặc tả giao thức</a>.</p>
 <p class="paper-small">Trạng thái báo cáo tại thời điểm viết: thiết kế phương pháp và phép kiểm chứng toán học; không có dữ liệu độ chính xác GRU, mức cải thiện so Viterbi, hoặc phép đo neural decoder trên ESP32-S3 đã công bố. Mọi con số tiếp theo phải trích tới artifact tái lập.</p>
 </section>
