@@ -9,25 +9,25 @@ Configure GitHub Pages: Settings → Pages → Build and deployment → Deploy f
 \`\`\`sh
 python -m unittest discover -s tests -p 'test_*.py' -v
 node --test tests/*.test.cjs
-python portable/python/vifirmware.py encode "XIN CHAO" "Xin chào"
+python portable/python/vifirmware.py encode "TOIY" "tôi"
 \`\`\`
 
 ## 3. C++
 \`\`\`sh
 c++ -std=c++17 -O2 -Wall -Wextra -pedantic portable/cpp/vifirmware.cpp -o vifirmware_cpp
-./vifirmware_cpp encode "XIN CHAO" "Xin chào"
+./vifirmware_cpp encode "TOIY" "tôi"
 \`\`\`
 
 ## 4. Java
 \`\`\`sh
 javac portable/java/ViFirmware.java
-java -cp portable/java ViFirmware encode "XIN CHAO" "Xin chào"
+java -cp portable/java ViFirmware encode "TOIY" "tôi"
 \`\`\`
 
 ## 5. Swift
 \`\`\`sh
 swiftc portable/swift/ViFirmware.swift -o vifirmware_swift
-./vifirmware_swift encode "XIN CHAO" "Xin chào"
+./vifirmware_swift encode "TOIY" "tôi"
 \`\`\`
 
 ## Cross-language equivalence
