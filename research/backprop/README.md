@@ -61,6 +61,17 @@ E1 and E2 must train on the same training sources and be selected on the same de
 
 Suggested controlled measurements: full-token accuracy, ambiguous-only accuracy, CER/WER, unseen-word accuracy, abstention rate, exact checked-code round trip, model bytes, ESP32-S3 Flash/RAM peak, latency p50/p95 and energy. Use multiple seeds, bootstrap confidence intervals and document any tuned parameters.
 
+## Runnable experimental benchmark (host CPU; PyTorch)
+
+After independently generating and auditing real train/dev/test JSONL:
+
+    python -m pip install torch
+    python3 research/backprop/benchmark.py --train train.jsonl --dev dev.jsonl --test test.jsonl --epochs 10 --seed 42 --out results.json
+
+The script trains a small Unicode-hashed candidate embedding + code-input GRU ranker, selects a checkpoint on dev ambiguous accuracy, and compares against a Laplace-smoothed bigram Viterbi path decoder on test. Each prediction is restricted to the supplied candidate list. It outputs token/ambiguous/OOV accuracy and approximate CER on joined tokens. **The script checks structure and NFC but cannot check E(candidate)=code without the versioned upstream converter; run that independent audit before calling the results scientifically valid.**
+
+Methodological caveat: Viterbi obtains a global bigram-best path, while the first GRU implementation chooses a locally best candidate from code-context hidden states. Report this difference and add a GRU beam decoder in a future controlled extension. These scripts make an experiment executable; they do not create a credible corpus or make a performance claim by themselves.
+
 ## ESP32-S3 / portability constraints
 
 - Train with Python/PyTorch on a host; the firmware uses a frozen compact C++ inference implementation without requiring Python/JavaScript on device.
