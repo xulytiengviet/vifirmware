@@ -16,13 +16,13 @@ test("Website provides linked embedded assessment and necessary local assets", (
   for (const anchor of ["tradeoffs", "solutions", "gates", "bench"]) {
     assert.ok(detail.includes('id="' + anchor + '"'), "Missing section: " + anchor);
   }
-  assert.match(detail, /chưa (?:có|phải).*full codec/i);
+  assert.match(detail, /CHỜ FLASH BOARD THẬT/i);
 });
 
 test("Assessment distinguishes reference converter from full on-device codec", () => {
   const doc = read("docs/FULL_CODEC_ESP32S3.md");
   assert.match(doc, /56 nhóm nhập nhằng/);
-  assert.match(doc, /chưa có full codec/i);
+  assert.match(doc, /chưa có kết quả flash và chạy thực trên bo mạch/i);
   assert.match(doc, /CQN UTF-8 NFC/);
   assert.match(doc, /ESP-IDF/);
   const audit = converter.audit();
