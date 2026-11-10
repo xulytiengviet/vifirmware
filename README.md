@@ -78,3 +78,24 @@ Khuyến nghị: cổng phát hành dựa trên parity với converter v5 → xu
 - Đối chiếu JS ↔ native host: **1.467 input strings; 1.467 encode + 1.467 canonical decode + 12 candidate cases, 0 mismatches** (CI 42775545642); tập mẫu không phải mọi Unicode.
 - ESP-IDF trong CI đã tạo file \`vifirmware_esp32s3.bin\` (0x3CDB0 byte ở lần biên dịch đầu); cần kiểm tra artifact workflow phiên bản mới và chạy flash trên board để chứng minh vận hành thật.
 - **Chưa có log board thật**, chưa đo latency/heap thực của thiết bị, chưa có strict byte-exact từ CVNSS4.0 không metadata.
+
+
+## Rule-constrained backpropagation · GRU × Viterbi (research proposal)
+
+**Paper:** [Rule-Constrained Backpropagation for Context-Aware Vietnamese Text Reconstruction from CVNSS4.0 with Base-27 and Ternary Edge Models](docs/backprop-paper.html) · [Reproducibility protocol](research/backprop/README.md) · [Tiny GRU vs bigram Viterbi runnable benchmark](research/backprop/benchmark.py).
+
+- **Symbolic layer** remains the fixed CVNSS4.0 encoder/candidate lattice; select only verified Unicode candidates.
+- **Neural layer** uses backpropagation to learn contextual candidate scores; a Viterbi bigram baseline uses the same lattice for a controlled comparison.
+- **Base27/VF1** keeps the normative SPACE=0, A=1…Z=26 ↔ 3 trits mapping. This is a data representation, not physical ternary logic.
+- **Edge target** is frozen, quantized C++ inference on ESP32-S3 **after** independent test corpus evaluation and actual hardware measurement.
+- **Current status:** research page, toy finite-difference gradient check and runnable host benchmark interface; no verified GRU advantage, full neural model weights or ESP32-S3 neural performance are claimed.
+
+For the pure-Python gradient mechanism check:
+
+    python3 research/backprop/toy_gradient.py
+
+For the real dataset baseline experiment, first generate audited train/dev/test JSONL corpora following the research protocol; install PyTorch on the host, then:
+
+    python3 research/backprop/benchmark.py --train train.jsonl --dev dev.jsonl --test test.jsonl --out results.json
+
+The portable C++, Java, Python and Swift tools continue to verify VF1 framing/transport; they are not four independent full CVNSS4.0 language implementations.
