@@ -9,7 +9,7 @@
       body:"Port lexer, âm tiết, quy tắc, candidate graph, Unicode contract sang core C/C++ dùng chung host và ESP-IDF. Đặt bảng ánh xạ trong Flash, giới hạn buffer và đo thực sau mỗi phiên bản.",
       offline:"Có, khi toàn bộ encoder/decoder đã ở trên board",
       memory:"Có thể tối ưu bảng Flash; cần đo heap và .bin",
-      full:"Có thể đạt sau G1–G6; hiện chưa hoàn tất",
+      full:"Đã có native C++; chưa có phép đo chạy trên bo mạch",
       risk:"Công port, Unicode NFC, 56 nhóm nhập nhằng và duy trì parity"
     },
     hybrid: {
