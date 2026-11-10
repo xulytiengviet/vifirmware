@@ -15,7 +15,7 @@
 <a class="skip" href="#lab">Chuyển đến phòng thí nghiệm</a>
 <header class="bar"><div class="wrap top">
 <a href="#home" class="brand"><span class="brand-icon">VF<span>.</span></span><span>ViFirmware<small>CVNSS4.0 / EMBEDDED LAB</small></span></a>
-<nav aria-label="Điều hướng"><a href="#architecture">Kiến trúc</a><a href="#lab">Thử nghiệm</a><a href="#languages">4 ngôn ngữ</a><a href="#science">Kiểm chứng</a><a href="./native-lab.html">Native ESP32</a><a href="#evaluation">ESP32-S3 · Ưu/nhược</a></nav>
+<nav aria-label="Điều hướng"><a href="#architecture">Kiến trúc</a><a href="#lab">Thử nghiệm</a><a href="#languages">4 ngôn ngữ</a><a href="#science">Kiểm chứng</a><a href="./backprop-paper.html">Bài báo GRU × Backprop</a><a href="./native-lab.html">Native ESP32</a><a href="#evaluation">ESP32-S3 · Ưu/nhược</a></nav>
 <a class="gh" href="https://github.com/xulytiengviet/vifirmware" rel="noopener noreferrer" target="_blank">GitHub ↗</a>
 </div></header>
 <main id="home">
@@ -115,6 +115,12 @@ idf.py -p COM5 flash monitor
 </div>
 <div class="actions"><a class="cta" href="./embedded.html">Xem phân tích + ma trận lựa chọn →</a><a class="ghost" href="./FULL_CODEC_ESP32S3.md">Đọc đánh giá kỹ thuật đầy đủ ↗</a></div>
 <div class="actions"><a class="cta" href="./native-lab.html">Mở phòng thử nghiệm native / Web Serial →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions/workflows/native.yml">Xem kiểm thử C++ ↗</a></div></section>
+<section class="wrap section" id="backprop-research">
+<div class="section-top"><span class="kicker">08 / SYMBOLIC × NEURAL RESEARCH</span><h2>CVNSS4.0 + Backpropagation: bài báo &amp; giao thức tái lập</h2>
+<p><strong>Rule-Constrained Backpropagation for Context-Aware Vietnamese Text Reconstruction from CVNSS4.0 with Base-27 and Ternary Edge Models.</strong> Giữ bộ quy tắc CVNSS4.0 cố định, dùng GRU nhỏ học cách chọn ứng viên Unicode hợp lệ theo ngữ cảnh và đối chiếu có kiểm soát với n-gram/Viterbi.</p>
+<p>Base27 (SPACE=0, A=1…Z=26) có ánh xạ song ánh thành 3 trít nhờ 27=3³. Đây là chứng minh biểu diễn dữ liệu; ưu thế neural, độ chính xác và chi phí firmware ESP32-S3 phải được đo độc lập. Demo gradient chỉ chứng minh cơ chế tối ưu, chưa phải kết quả GRU hoặc log board.</p></div>
+<div class="actions"><a class="cta" href="./backprop-paper.html">Đọc bài báo + thử Backprop &amp; Base27 →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/tree/main/research/backprop">Xem bộ kiểm chứng GRU/Viterbi ↗</a><a class="ghost" href="./native-lab.html">Thử native ESP32-S3 →</a></div>
+</section>
 <section class="wrap section" id="references">
 <div class="section-top"><span class="kicker">05 / REFERENCES</span><h2>Nguồn gốc & trách nhiệm nghiên cứu</h2></div>
 <p>CVNSS4.0 được phát triển bởi Kiều Trường Lâm và Trần Tư Bình. Bộ chuyển đổi v5.0.0-audit-safe được lấy từ dự án <a href="https://github.com/xulytiengviet/CVNSS4.0">CVNSS4.0</a>. BilaScript là dự án frontend riêng <a href="https://github.com/xulytiengviet/bilascript">BilaScript</a>. Giao thức VF1 và phòng thí nghiệm này là công cụ kiểm thử độc lập. Nghiên cứu/phát triển phần mềm: Long Ngo.</p>
