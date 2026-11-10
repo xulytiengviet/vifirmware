@@ -92,6 +92,17 @@
 </div>
 <div class="actions"><a class="cta" href="https://github.com/xulytiengviet/vifirmware/actions">Xem kết quả GitHub Actions ↗</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/BUILD.md">Tái lập thí nghiệm ↗</a></div>
 </section>
+<section class="wrap section" id="firmware">
+<div class="section-top"><span class="kicker">06 / TARGET HARDWARE</span><h2>ESP32-S3 · firmware tham chiếu</h2>
+<p>Mã nguồn ESP-IDF nhận một vector CVNSS4.0 đã tính trước (<code>tôi → TOIY</code>), dựng khung VF1, kiểm tra trits, CRC32 và byte gốc, sau đó ghi log thời gian và bộ nhớ. Chưa chứng minh bằng kết quả flash trên bo mạch thật.</p></div>
+<div class="code-card">
+<div class="panel-title"><span>firmware/esp32s3/main/main.cpp</span><a href="https://github.com/xulytiengviet/vifirmware/tree/main/firmware/esp32s3" target="_blank" rel="noopener noreferrer">Mã nguồn firmware ↗</a></div>
+<pre>cd firmware/esp32s3
+idf.py set-target esp32s3
+idf.py build
+idf.py -p COM5 flash monitor</pre></div>
+<p class="languages-note">Bước kế tiếp để xác nhận khả năng nhúng: build .bin, flash lên ESP32-S3, lưu UART log, ghi thời gian thực thi, heap, kích thước firmware và tỷ lệ PASS. Ví dụ chưa tích hợp toàn bộ quy tắc chuyển đổi CVNSS4.0 vào thiết bị.</p>
+</section>
 <section class="wrap section" id="references">
 <div class="section-top"><span class="kicker">05 / REFERENCES</span><h2>Nguồn gốc & trách nhiệm nghiên cứu</h2></div>
 <p>CVNSS4.0 được phát triển bởi Kiều Trường Lâm và Trần Tư Bình. Bộ chuyển đổi v5.0.0-audit-safe được lấy từ dự án <a href="https://github.com/xulytiengviet/CVNSS4.0">CVNSS4.0</a>. BilaScript là dự án frontend riêng <a href="https://github.com/xulytiengviet/bilascript">BilaScript</a>. Giao thức VF1 và phòng thí nghiệm này là công cụ kiểm thử độc lập. Nghiên cứu/phát triển phần mềm: Long Ngo.</p>
