@@ -36,7 +36,7 @@ The four clients must output the same ASCII VF1 line for identical CODE and orig
 
 ## ESP32-S3 / MCU target
 
-This repository currently contains portable C++17 **host code**, not an ESP-IDF firmware project or a hardware flash log. To port: replace iostream/CLI with ESP-IDF UART, use bounded fixed buffers (CODE max 1024, full frame length bound), run golden vectors on device, measure .bin size, free heap, encoding latency and error counters.
+This repository now contains an ESP-IDF project that calls a native C++ CVNSS4.0 encoder and decoder. Host and cross-compiler results are available in GitHub Actions, but a hardware flash log is still missing. To port: replace iostream/CLI with ESP-IDF UART, use bounded fixed buffers (CODE max 1024, full frame length bound), run golden vectors on device, measure .bin size, free heap, encoding latency and error counters.
 
 Raw sidecars are intentionally redundant and expensive. For telemetry where only the canonical CVNSS4.0 code is required, a different versioned lossy/canonical-only packet may be used but must never claim byte-exact recovery.
 
@@ -67,3 +67,16 @@ Trang đánh giá: [embedded.html](embedded.html) · Báo cáo chuyên sâu: [FU
 ## Generate reference vectors for a future C/C++ full-codec port
 
 Run `node tools/export_reference_vectors.cjs > golden-reference.json`. The vectors come from the official JavaScript converter and expose canonical differences and candidates; this does **not** test a native MCU encoder or prove universal losslessness. Keep the generated file next to native-port comparison logs.
+
+
+## Native core verification & UART0 live experiment
+
+1. Regenerate static table: \`node tools/gen_native_tables.cjs\`.
+2. Build host: \`g++ -std=c++17 -O2 -I native/include native/src/cvnss_codec.cpp native/src/cvnss_cli.cpp -o build/cvnss_native\` (create \`build/\` first).
+3. Host differential parity: \`node tools/native-parity.cjs\`. View report \`build/native-parity-report.json\`.
+4. Cross-build: GitHub Actions workflow \`.github/workflows/esp-idf.yml\`, or use ESP-IDF command lines in \`firmware/esp32s3/README.md\`.
+5. Physical UART0 115200: \`ENC Tôi yêu tiếng Việt\`, \`DEC toiy\`, \`INS es\`; record \`CVNSS4\`, \`DECODE\`, \`ENC_US\`, \`DEC_US\`, heap.
+
+Interactive web lab: \`docs/native-lab.html\` simulates the JS reference. Where supported, Web Serial can connect to an actual ESP32-S3 UART0 port and capture logs; it does not fake MCU measurements.
+
+**Scientific boundary:** The host and cross-build tests are not real board runtime measurements. For all-uppercase and name case or non-Vietnamese Unicode, run strict domain audits; canonical decoding is not universally lossless.
