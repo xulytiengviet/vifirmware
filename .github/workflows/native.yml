@@ -1,0 +1,44 @@
+name: CVNSS4.0 native C++ / ESP32 pre-feasibility
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-host-simulation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Regenerate full tables from JS v5 and verify generated source
+        run: |
+          node tools/gen_native_tables.cjs
+          git diff --exit-code -- native/include/cvnss_tables.generated.h
+      - name: Build native host executable from exact ESP-IDF core
+        run: |
+          mkdir -p build
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+            -I native/include native/src/cvnss_codec.cpp native/src/cvnss_cli.cpp \
+            -o build/cvnss_native
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+            -I native/include native/src/cvnss_codec.cpp native/tests/native-unit.cpp \
+            -o build/native-unit
+      - name: Run native C++ unit checks
+        run: ./build/native-unit
+      - name: JS v5 vs real native C++ differential parity
+        run: node tools/native-parity.cjs
+      - name: Host-only microbenchmark (NOT MCU)
+        run: ./build/cvnss_native benchmark > build/native-host-benchmark.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cvnss-native-host-evidence
+          path: |
+            build/native-parity-report.json
+            build/native-host-benchmark.txt
+          if-no-files-found: ignore
