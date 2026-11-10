@@ -5,10 +5,10 @@
   const sample = "Tôi yêu tiếng Việt";
   let lastFrame = "";
   const langs = {
-    cpp: ["portable/cpp/vifirmware.cpp", 'c++ -std=c++17 -O2 portable/cpp/vifirmware.cpp -o vf\n./vf encode "XIN CHAO" "Xin chào"\n# decode: ./vf decode "$FRAME"'],
-    java: ["portable/java/ViFirmware.java", 'javac portable/java/ViFirmware.java\njava -cp portable/java ViFirmware encode "XIN CHAO" "Xin chào"'],
-    python: ["portable/python/vifirmware.py", 'python portable/python/vifirmware.py encode "XIN CHAO" "Xin chào"\npython portable/python/vifirmware.py decode "$FRAME"'],
-    swift: ["portable/swift/ViFirmware.swift", 'swiftc portable/swift/ViFirmware.swift -o vf_swift\n./vf_swift encode "XIN CHAO" "Xin chào"'],
+    cpp: ["portable/cpp/vifirmware.cpp", 'c++ -std=c++17 -O2 portable/cpp/vifirmware.cpp -o vf\n./vf encode "TOIY" "tôi"\n# decode: ./vf decode "$FRAME"'],
+    java: ["portable/java/ViFirmware.java", 'javac portable/java/ViFirmware.java\njava -cp portable/java ViFirmware encode "TOIY" "tôi"'],
+    python: ["portable/python/vifirmware.py", 'python portable/python/vifirmware.py encode "TOIY" "tôi"\npython portable/python/vifirmware.py decode "$FRAME"'],
+    swift: ["portable/swift/ViFirmware.swift", 'swiftc portable/swift/ViFirmware.swift -o vf_swift\n./vf_swift encode "TOIY" "tôi"'],
     bila: ["examples/bridge.bila", '---bila:strict---\nhaml_sob kitra_trit(gia_tri) {\n    neub (gia_tri >= 0 && gia_tri <= 2) {\n        trov_ved true;\n    }\n    trov_ved false;\n}\nbilb hop_le = kitra_trit(2);\n// BilaScript v4 -> JavaScript, KHÔNG -> native C++/Java/Python/Swift']
   };
   function status(label, error) {
