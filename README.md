@@ -1,6 +1,6 @@
 # ViFirmware · CVNSS4.0 × BilaScript × Embedded Data Verification
 
-**An evidence-first, multilingual research laboratory** for Vietnamese text representation, Base27/trits and embedded-oriented data transport. Website: `docs/index.html` (GitHub Pages).
+**An evidence-first, multilingual research laboratory** for Vietnamese text representation, Base27/trits and embedded-oriented data transport. Website: `docs/index.html` (GitHub Pages; enable Source: GitHub Actions in Settings → Pages).
 
 ## What this repository does
 

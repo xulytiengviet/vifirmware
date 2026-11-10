@@ -17,6 +17,15 @@ jobs:
         with: {distribution: 'temurin', java-version: '17'}
       - name: Node reference and upstream converter
         run: node --test tests/frame.test.cjs
+      - name: Compile and run actual BilaScript v4 sample
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch Babylscript1_7R2_BRANCH https://github.com/xulytiengviet/bilascript.git /tmp/bilascript
+          node /tmp/bilascript/v4/bin/bila.js check examples/bridge.bila
+          node /tmp/bilascript/v4/bin/bila.js compile examples/bridge.bila -o /tmp/bridge.js
+          node /tmp/bridge.js > /tmp/bila-output
+          grep -Fx true /tmp/bila-output
       - name: Python tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Compile C++17 and Java

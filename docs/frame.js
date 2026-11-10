@@ -36,7 +36,7 @@
     for (const b of new TextEncoder().encode(checkCode(code))) feed(b);
     feed(0);
     for (const b of bytes) feed(b);
-    return (value ^ 0xFFFFFFFF).toString(16).toUpperCase().padStart(8, "0");
+    return ((value ^ 0xFFFFFFFF) >>> 0).toString(16).toUpperCase().padStart(8, "0");
   }
   function toHex(bytes) {
     return Array.from(bytes, b => b.toString(16).toUpperCase().padStart(2, "0")).join("");

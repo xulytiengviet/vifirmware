@@ -10,3 +10,5 @@ haml_sob kitra_trit(gia_tri) {
 }
 
 bilb hop_le = kitra_trit(2);
+
+console.log(hop_le);

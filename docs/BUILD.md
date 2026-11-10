@@ -3,7 +3,7 @@
 Recommended versions: Python 3.10+, Node.js 20+, C++17 compiler, Java 17+, Swift 5.7+. Windows 10/11, Linux or macOS.
 
 ## 1. Browser
-Configure GitHub Pages: Settings → Pages → Deploy from a branch → main → /docs. Open the GitHub Pages URL. No backend, CDN or API key required.
+Configure GitHub Pages: Settings → Pages → Build and deployment → Source: GitHub Actions. The `.github/workflows/pages.yml` workflow publishes `/docs` on push to main. GitHub Pages must be enabled once in repository settings. Open the GitHub Pages URL. No backend, CDN or API key required.
 
 ## 2. Python and Node
 \`\`\`sh
