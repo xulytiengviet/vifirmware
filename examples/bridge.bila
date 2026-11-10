@@ -1,0 +1,12 @@
+---bila:strict---
+// BilaScript v4 frontend emits JavaScript; this is a syntax demonstration.
+// The official compiler is hosted at github.com/xulytiengviet/bilascript.
+// VF1 transport and CVNSS4.0 conversion are runtime services, not builtin grammar.
+haml_sob kitra_trit(gia_tri) {
+    neub (gia_tri >= 0 && gia_tri <= 2) {
+        trov_ved true;
+    }
+    trov_ved false;
+}
+
+bilb hop_le = kitra_trit(2);
