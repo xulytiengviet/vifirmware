@@ -3,7 +3,7 @@
 Recommended versions: Python 3.10+, Node.js 20+, C++17 compiler, Java 17+, Swift 5.7+. Windows 10/11, Linux or macOS.
 
 ## 1. Browser
-Configure GitHub Pages: Settings → Pages → Build and deployment → Source: GitHub Actions. The `.github/workflows/pages.yml` workflow publishes `/docs` on push to main. GitHub Pages must be enabled once in repository settings. Open the GitHub Pages URL. No backend, CDN or API key required.
+Configure GitHub Pages: Settings → Pages → Build and deployment → Deploy from a branch → branch: main → folder: /docs → Save. This requires a one-time repository setting change by its administrator. Open the GitHub Pages URL. No backend, CDN or API key required.
 
 ## 2. Python and Node
 \`\`\`sh
@@ -43,3 +43,17 @@ Raw sidecars are intentionally redundant and expensive. For telemetry where only
 ## Documentation and measurement
 
 Do not label source code parity as TRL 5 or claim firmware operation until a compiled MCU binary and on-device UART logs are recorded. Tests and browser verification are distinct from hardware validation.
+
+
+## ESP32-S3 reference source (unverified)
+
+An ESP-IDF C++ reference app is in \`firmware/esp32s3/\`. It transports the precomputed CVNSS4.0 reference vector \`tôi → TOIY\` as VF1 and checks trits, CRC32 and UTF-8 bytes. This source does not yet implement the full CVNSS4.0 language codec on ESP32-S3.
+
+\`\`\`sh
+cd firmware/esp32s3
+idf.py set-target esp32s3
+idf.py build
+idf.py -p COM5 flash monitor
+\`\`\`
+
+Replace COM5 with the actual serial port. Do not claim measured hardware performance until real flash logs and a successful binary build have been recorded.
