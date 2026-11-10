@@ -17,10 +17,10 @@
   <div><div class="eyebrow"><span class="led"></span> FULL CODEC PORT / ARCHITECTURAL EVALUATION</div>
   <h1>CVNSS4.0 ở cấp<br><em>Firmware</em><span class="caret">_</span></h1>
   <p class="lead">Đưa <b>toàn bộ quy tắc CVNSS4.0</b> sang C/C++ chạy trực tiếp trên ESP32-S3: liệu có nhanh, nhẹ, offline và đáng triển khai? Đánh giá công khai những lợi ích có thể đạt, điểm yếu kỹ thuật và bằng chứng còn thiếu.</p>
-  <div class="actions"><a class="cta" href="#tradeoffs">Xem đánh giá ưu–nhược →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/FULL_CODEC_ESP32S3.md">Bản nghiên cứu chi tiết ↗</a></div>
-  <p class="readiness"><span class="readiness-dot"></span> TRẠNG THÁI THỰC: <strong>CHƯA XÁC MINH FULL CODEC CHẠY TRÊN BOARD</strong></p></div>
+  <div class="actions"><a class="cta" href="./native-lab.html">Mở phòng thử nghiệm Unicode ESP32-S3 →</a><a class="ghost" href="#tradeoffs">Đánh giá ưu–nhược ↗</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/blob/main/docs/FULL_CODEC_ESP32S3.md">Bản nghiên cứu chi tiết ↗</a></div>
+  <p class="readiness"><span class="readiness-dot"></span> TRẠNG THÁI THỰC: <strong>NATIVE C++ HOST PASS · CHỜ FLASH BOARD THẬT</strong></p></div>
   <div class="embed-visual" aria-label="Sơ đồ kiến trúc firmware mục tiêu">
-    <div class="visual-head"><span class="dots">● ● ●</span> ESP32-S3 / SYSTEM LAYERS <span>PROPOSED</span></div>
+    <div class="visual-head"><span class="dots">● ● ●</span> ESP32-S3 / SYSTEM LAYERS <span>NATIVE CORE BUILT</span></div>
     <div class="visual-body"><div class="v-step"><small>INPUT</small><b>UTF-8 + Unicode NFC</b><span>Kiểm tra UTF-8 · chuẩn hóa / hợp đồng NFC</span></div><div class="v-arrow">↓</div>
       <div class="v-step accent"><small>FULL CVNSS4.0 ON DEVICE</small><b>Lexer → rules → candidate graph</b><span>52 quy tắc · chính sách nhập nhằng · forward / reverse</span></div><div class="v-arrow">↓</div>
       <div class="v-step"><small>EMBEDDED TRANSPORT</small><b>ASCII → Base27 → optional VF1</b><span>CRC, escape, framing; tính byte thực tế</span></div><div class="v-arrow">↓</div>
@@ -36,10 +36,10 @@
 </section>
 
 <section class="wrap section" id="boundary">
- <div class="section-top"><span class="kicker">01 / SCIENTIFIC BOUNDARY</span><h2>Thế nào mới thực sự là “full codec”?</h2><p>Không đánh đồng chương trình thử CRC với bộ chuyển đổi ngôn ngữ. Firmware chỉ đạt mục tiêu khi ESP32-S3 tự thực hiện CQN ↔ CVNSS4.0, không nhận sẵn mã ASCII đã tính từ máy chủ.</p></div>
+ <div class="section-top"><span class="kicker">01 / SCIENTIFIC BOUNDARY</span><h2>Thế nào mới thực sự là “full codec”?</h2><p>Không đánh đồng chương trình thử CRC với bộ chuyển đổi ngôn ngữ. Mã nguồn ESP-IDF hiện đã gọi encoder/decoder native thực, nhận UTF-8 qua UART0, không còn dùng một mã CVNSS4.0 tính sẵn. Việc xác nhận vận hành cần log flash và UART trên bo mạch thật.</p></div>
  <div class="compare-cards">
-  <article class="comparison current"><span>HIỆN TẠI · CÓ MÃ NGUỒN</span><h3>VF1 + một vector tính sẵn</h3><p>ESP-IDF demo dùng <code>tôi → TOIY</code> và tạo/kiểm tra trits, CRC32, dữ liệu gốc. Chưa có log flash board được kiểm chứng.</p><div class="barline"><span>Full encoder/decoder</span><b>Chưa</b></div></article>
-  <article class="comparison proposed"><span>MỤC TIÊU · CHƯA NGHIỆM THU</span><h3>Native CVNSS4.0 core</h3><p>Parser UTF-8, quy tắc âm tiết, bảng ánh xạ, ứng viên giải mã, xử lý ngoại lệ, profile strict/canonical/lossless và kiểm thử với bộ JS gốc.</p><div class="barline"><span>Biên dịch & đo trên MCU</span><b>Chưa</b></div></article>
+  <article class="comparison current"><span>HIỆN TẠI · CÓ MÃ NGUỒN</span><h3>Native C++ CQN ↔ CVNSS4.0</h3><p>Lõi C++ biên dịch độc lập trên host, tự mã hóa Unicode và giải mã canonical. Đã đối chiếu 1.467 mẫu với JS v5, không có sai khác trong tập thử. ESP-IDF cũng đã sinh ảnh firmware; chưa có log chạy trên board.</p><div class="barline"><span>Codec độc lập không cần JS runtime</span><b>Đã có mã & kiểm thử host</b></div></article>
+  <article class="comparison proposed"><span>MỤC TIÊU · CHƯA NGHIỆM THU</span><h3>Triển khai và kiểm định trên chip</h3><p>Thử nghiệm UART0 gửi Unicode thực, đo RAM/Flash/μs trên ESP32-S3; sau đó bổ sung strict/lossless escape, fuzzing và quản lý phiên bản bộ quy tắc.</p><div class="barline"><span>Biên dịch & đo trên MCU</span><b>Chưa</b></div></article>
  </div>
  <div class="equation"><code>D(E(s)) = s</code><span>Chỉ khẳng định cho miền mã đơn trị đã được chứng minh, hoặc khi có metadata/escape đủ để khôi phục. Giải mã chuẩn tắc từ mã nhiều-một không bảo đảm round-trip toàn phần.</span></div>
 </section>
@@ -94,7 +94,7 @@
   <label><input type="checkbox" data-gate><span><b>G6 · Error & fuzzing</b><small>Malformed UTF-8, kích thước tối đa, input lạ, watchdog, reset</small></span></label>
   <label><input type="checkbox" data-gate><span><b>G7 · OTA & stability</b><small>Firmware signing/rollback, log nhiều ngày, theo dõi lỗi</small></span></label>
  </div></div>
- <div class="notice-line"><strong>Hiện trạng công khai:</strong> Mã VF1 và self-test tham chiếu đã có; demo ESP-IDF chưa phải full codec. Trạng thái thực tế không được lấy từ các ô chọn mô phỏng này.</div>
+ <div class="notice-line"><strong>Hiện trạng công khai:</strong> Đã có core C++ native với 1.094 dòng quy tắc và kiểm thử 1.467 đầu vào trên host; chưa có log chạy trên bo mạch thật. Trạng thái thực tế không được lấy từ các ô chọn mô phỏng này.</div>
 </section>
 
 <section class="wrap section" id="bench">
@@ -117,7 +117,7 @@
 <a href="https://www.espressif.com/en/products/socs/esp32-s3">ESP32-S3 — Espressif ↗</a>
 <a href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/partition-tables.html">ESP-IDF Partition Tables ↗</a>
 </div>
-<div class="actions"><a class="cta" href="./index.html#lab">Quay lại thí nghiệm CVNSS4.0 →</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions">Xem CI GitHub ↗</a></div>
+<div class="actions"><a class="cta" href="./native-lab.html">Mô phỏng Native / Kết nối ESP32-S3 →</a><a class="ghost" href="./index.html#lab">Bộ tham chiếu CVNSS4.0 ↗</a><a class="ghost" href="https://github.com/xulytiengviet/vifirmware/actions">Xem CI GitHub ↗</a></div>
 </section>
 </main>
 <footer><div class="wrap foot"><span>ViFirmware · CVNSS4.0 Embedded Feasibility · 2026</span><span>Long Ngo · Đánh giá thiết kế, không phải chứng nhận phần cứng</span></div></footer>
