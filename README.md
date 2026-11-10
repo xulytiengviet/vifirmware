@@ -94,6 +94,13 @@ For the pure-Python gradient mechanism check:
 
     python3 research/backprop/toy_gradient.py
 
+Run the math checks and generate real converter-backed candidate labels before comparison:
+
+    python3 research/backprop/check_base27.py
+    node research/backprop/build_corpus.cjs input_sentences.txt corpus.jsonl
+
+The generated audit report records invalid lines and excluded alternatives; split by document/source and audit held-out examples before training.
+
 For the real dataset baseline experiment, first generate audited train/dev/test JSONL corpora following the research protocol; install PyTorch on the host, then:
 
     python3 research/backprop/benchmark.py --train train.jsonl --dev dev.jsonl --test test.jsonl --out results.json
