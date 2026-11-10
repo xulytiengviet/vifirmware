@@ -1,0 +1,69 @@
+:root{--proof-bg:#090e14;--proof-panel:#111923;--proof-line:#2c3945;--proof-cyan:#82d6e9;--proof-lime:#85e3b5;--proof-orange:#f3c579;--proof-red:#f18679}
+body{background:var(--proof-bg)}
+.proof-hero{display:grid;grid-template-columns:1.12fr .88fr;gap:42px;align-items:center;padding:72px 0 53px}
+.proof-hero h1{font-size:clamp(42px,5.1vw,70px);line-height:1.14;letter-spacing:-.045em;margin:18px 0}
+.proof-hero h1 em{font-style:normal;color:var(--proof-cyan)}
+.proof-hero .lead{font-size:16px;max-width:630px}
+.proof-warn{border-left:3px solid var(--proof-orange);background:#252012c4;font-size:12px;line-height:1.75;color:#bac4c8;padding:14px 17px;margin-top:22px}
+.proof-warn strong{color:var(--proof-orange)}
+.proof-diagram{border:1px solid #364754;background:#10171f;box-shadow:0 20px 60px #0007;border-radius:11px;overflow:hidden}
+.diagram-top{display:flex;justify-content:space-between;gap:8px;padding:14px 18px;border-bottom:1px solid var(--proof-line);font:700 11px ui-monospace,Consolas,monospace;color:var(--muted)}
+.diagram-top span{color:var(--proof-lime)}
+.d-node{margin:0 19px;background:#0d1219;border:1px solid var(--proof-line);border-radius:7px;padding:14px 17px}
+.d-node:first-of-type{margin-top:20px}
+.d-node.engine{border-color:#408877;background:#12231e}
+.d-node small,.d-node span{display:block;font-size:11px;color:var(--muted)}
+.d-node small{color:var(--proof-orange);font-weight:700;letter-spacing:.08em}
+.d-node b{display:block;font-size:17px;color:#fff}
+.d-node.engine b{color:var(--proof-lime)}
+.d-arrow{text-align:center;line-height:1.5;color:var(--proof-cyan)}
+.diagram-foot{margin-top:19px;border-top:1px solid var(--proof-line);padding:11px;text-align:center;color:var(--proof-orange);font:700 10px ui-monospace,Consolas,monospace}
+.proof-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--proof-line);border-bottom:1px solid var(--proof-line)}
+.proof-metrics>div{padding:21px 19px;border-right:1px solid var(--proof-line)}
+.proof-metrics>div:last-child{border-right:0}
+.proof-metrics small,.proof-metrics span{display:block;font-size:11px;color:var(--muted)}
+.proof-metrics small{letter-spacing:.09em;font-weight:700}
+.proof-metrics strong{font-size:34px;display:block;font-variant-numeric:tabular-nums;color:var(--proof-cyan);line-height:1.35}
+.proof-lab{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.lab-input,.lab-output,.console-box{border:1px solid var(--proof-line);background:var(--proof-panel);border-radius:10px;overflow:hidden}
+.pane-head{padding:13px 17px;border-bottom:1px solid var(--proof-line);display:flex;align-items:center;justify-content:space-between;gap:10px;font:700 10px ui-monospace,Consolas,monospace;letter-spacing:.05em;color:#afbac6}
+.online{color:var(--proof-lime)}
+.lab-input label{font-size:12px;color:#aeb9c4;display:block;padding:19px 20px 8px}
+.lab-input textarea{display:block;margin:0 20px;width:calc(100% - 40px);min-height:135px;background:#080d13;color:#f4f7fa;border:1px solid #3c505a;border-radius:7px;padding:14px;resize:vertical}
+.sample-row{display:flex;flex-wrap:wrap;gap:6px;margin:13px 20px}
+.sample-row button{padding:5px 8px;border:1px solid var(--proof-line);background:#151f28;color:#bdc8d1;border-radius:4px;font-size:11px}
+.sample-row button:hover{border-color:var(--proof-cyan)}
+.command-row{display:flex;gap:8px;flex-wrap:wrap;margin:15px 20px}
+.command-row button{padding:10px 12px;border-radius:6px;font-size:12px;font-weight:700}
+.command-row .main-button{background:var(--proof-cyan);color:#10171a;border:1px solid var(--proof-cyan)}
+.command-row .outline-button{background:transparent;color:#d7e3e7;border:1px solid #455968}
+.command-row button:disabled{opacity:.38;cursor:not-allowed}
+.microcopy{font-size:11px;color:var(--muted);line-height:1.65;padding:0 20px}
+.device-head{margin-top:20px;border-top:1px solid var(--proof-line)}
+.pill-warn{color:var(--proof-orange);letter-spacing:0;font-size:10px}
+#reference-status{color:var(--proof-lime);font-size:10px}
+.out-box{margin:13px 17px;background:#0b1118;border:1px solid #263746;border-radius:7px;padding:11px 13px}
+.out-box small{display:block;color:#90a1ad;font-size:10px;letter-spacing:.06em}
+.out-box code,.out-box strong{display:block;margin-top:7px;color:var(--proof-lime);font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.out-box strong{font-size:12px}
+.console-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:17px}
+.console-box pre{min-height:215px;max-height:400px;overflow:auto;padding:17px;color:var(--proof-lime);font:12px/1.7 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.plain-btn{border:0;background:transparent;color:var(--proof-orange);font-size:11px;cursor:pointer}
+.board-proof{margin:0;padding:10px 16px;color:var(--proof-orange);font-size:11px;border-top:1px solid var(--proof-line)}
+.proof-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.proof-steps article{background:var(--proof-panel);border:1px solid var(--proof-line);border-top:3px solid var(--proof-cyan);padding:21px;border-radius:9px}
+.proof-steps article:first-child{border-top-color:var(--proof-orange)}
+.proof-steps article:last-child{border-top-color:var(--proof-red)}
+.proof-steps small{color:var(--proof-orange);font:700 11px ui-monospace,Consolas,monospace}
+.proof-steps h3{font-size:19px;margin:10px 0}
+.proof-steps p{color:var(--muted);font-size:13px}
+.proof-steps span,.proof-steps a{font:700 11px ui-monospace,Consolas,monospace;color:var(--proof-lime)}
+.methods{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.methods div{background:#111b21;border:1px solid var(--proof-line);padding:21px;border-radius:7px}
+.methods h3{font-size:17px;margin:0 0 7px;color:var(--proof-cyan)}
+.methods p{font-size:13px;color:var(--muted);margin:0}
+.methods code{color:var(--proof-orange)}
+#reproduce .code-card pre{color:var(--proof-lime);line-height:1.75}
+#reproduce .code-card a{color:var(--proof-orange)}
+@media(max-width:950px){.proof-hero{grid-template-columns:1fr}.proof-metrics{grid-template-columns:repeat(2,1fr)}.proof-metrics>div:nth-child(2){border-right:0}.proof-metrics>div:nth-child(-n+2){border-bottom:1px solid var(--proof-line)}}
+@media(max-width:700px){.proof-lab,.console-grid,.proof-steps,.methods{grid-template-columns:1fr}.proof-hero{padding-top:45px}.proof-hero h1{font-size:42px}.proof-metrics strong{font-size:26px}}
