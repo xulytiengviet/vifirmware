@@ -1,6 +1,6 @@
 # Đánh giá đưa toàn bộ CVNSS4.0 lên firmware ESP32-S3
 
-**Trạng thái:** phương án kiến trúc và tiêu chí nghiệm thu, **chưa có full codec C/C++ đã được kiểm chứng trên bo mạch**. Phiên bản bộ chuyển đổi tham chiếu: [CVNSS4.0 v5.0.0-audit-safe](https://github.com/xulytiengviet/CVNSS4.0/blob/main/assets/cvnss-converter.js). Bộ chuyển đổi hiện công bố 56 nhóm nhập nhằng và cách chọn ứng viên canonical.
+**Trạng thái mới 10/11/2026:** đã có bộ mã hóa/giải mã CVNSS4.0 native C++ (không dựa vào mã tính sẵn), **đã xác nhận parity trên host 1.467 mẫu / 0 sai khác**, đã có log cross-build tạo ảnh firmware ESP32-S3; **chưa có kết quả flash và chạy thực trên bo mạch**, chưa đo heap/độ trễ phần cứng. Phiên bản bộ chuyển đổi tham chiếu: [CVNSS4.0 v5.0.0-audit-safe](https://github.com/xulytiengviet/CVNSS4.0/blob/main/assets/cvnss-converter.js). Bộ chuyển đổi hiện công bố 56 nhóm nhập nhằng và cách chọn ứng viên canonical.
 
 ## 1. Nói chính xác "full codec on-device" là gì?
 
@@ -54,7 +54,7 @@ Nguồn chính thức:
 
 **B — Interpreter JS trên MCU (nghiên cứu):** tái sử dụng logic gần nguồn gốc, nhưng runtime JS/GC, chi phí bộ nhớ và tương thích ECMA/Unicode phải đo thực; không khẳng định sẽ nằm trong ngân sách bộ nhớ.
 
-**C — Hybrid (đã có nguyên mẫu VF1):** host xử lý CVNSS4.0, MCU kiểm tra khung và dùng Base27/trit; dễ làm trước nhưng **không phải** full on-device codec, vẫn phụ thuộc host cho bước chuyển đổi.
+**C — Hybrid (lựa chọn đối chứng VF1):** host xử lý CVNSS4.0, MCU kiểm tra khung và dùng Base27/trit; dễ làm trước nhưng **không phải** full on-device codec, vẫn phụ thuộc host cho bước chuyển đổi. Nhánh firmware hiện tại đã tiến thêm một bước: tích hợp bộ chuyển đổi native C++ thay vì VF1 tính sẵn.
 
 BilaScript v4 có frontend sinh JavaScript: `*.bila → lexer/AST/semantic → JavaScript`, **chưa sinh firmware C++ trực tiếp**. Để dùng với firmware phải có backend mới, hoặc dùng để viết logic host/test generation; không được gọi là đã biên dịch BilaScript thành mã máy ESP32-S3.
 
@@ -86,3 +86,18 @@ BilaScript v4 có frontend sinh JavaScript: `*.bila → lexer/AST/semantic → J
 6. Nếu đạt ngưỡng yêu cầu đã khai báo trước, mới đánh giá có nên dùng Full Codec hay Hybrid trong sản phẩm.
 
 **Khuyến nghị:** Đưa full codec lên ESP32-S3 phù hợp cho thiết bị offline, kiosk tiếng Việt, cảm biến/robot điều khiển nhỏ hoặc text command đơn giản. Không có cơ sở kết luận nó làm TinyLLM nhanh hơn hay biến chip nhị phân thành tam phân; những đề tài đó phải được đo riêng.
+
+
+## 8. Kết quả thực nghiệm tiền khả thi đã có
+
+Các tệp đã được thêm trực tiếp vào repository:
+
+- \`native/src/cvnss_codec.cpp\`: Unicode tiếng Việt → CVNSS4.0, giải mã chuẩn tắc và ứng viên, giới hạn input 1024 byte UTF-8.
+- \`native/include/cvnss_tables.generated.h\`: 1.094 dòng quy tắc, 132 ánh xạ thành phần NFD/NFC tiếng Việt, 73 ánh xạ hoa/thường, sinh bằng \`tools/gen_native_tables.cjs\`.
+- \`tests/native-unit.cpp\` và \`tools/native-parity.cjs\`: unit test UTF-8, NFD, giới hạn đầu vào; differential parity độc lập với JS v5 trên 1.467 input.
+- \`firmware/esp32s3/main/main.cpp\`: firmware gọi native core thực, nhận dòng \`ENC <UTF-8 text>\` trên UART0 và đo \`ENC_US\`, \`DEC_US\`, heap nội.
+- \`.github/workflows/esp-idf.yml\`: compile Xtensa target từ ảnh ESP-IDF chính thức. Lần biên dịch đầu tạo được \`vifirmware_esp32s3.bin\` kích thước 0x3CDB0 byte. Log này **không** phải log flash thiết bị.
+
+Số liệu khả thi ở cấp độ **native-host / cross-compile** không được đồng nhất với latency, heap hoặc độ ổn định đo trên ESP32-S3. Các chỉ số sau vẫn là \`NOT MEASURED\` cho đến khi xuất log UART của board thật.
+
+Xem [phòng thí nghiệm tương tác](native-lab.html). Phần JS trên website chỉ sinh kết quả tham chiếu; nút Web Serial (nếu người dùng cấp quyền) mới truy vấn thiết bị thật.
