@@ -1,0 +1,42 @@
+name: ESP32-S3 native CVNSS firmware cross-build
+on:
+  push:
+    branches: [main]
+    paths:
+      - firmware/esp32s3/**
+      - native/**
+      - .github/workflows/esp-idf.yml
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  esp32s3-cross-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - name: Compile native CVNSS4.0 app for Xtensa ESP32-S3 using official ESP-IDF
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5.3
+          target: esp32s3
+          path: firmware/esp32s3
+      - name: Record binary sizes and SHA256 (cross-build, not board flash)
+        shell: bash
+        run: |
+          set -euo pipefail
+          find firmware/esp32s3/build -maxdepth 1 -type f -name '*.bin' -print
+          find firmware/esp32s3/build -maxdepth 1 -type f -name '*.bin' -exec sha256sum {} \; > firmware/esp32s3/build/firmware-sha256.txt
+          test -f firmware/esp32s3/build/vifirmware_esp32s3.bin
+          ls -lh firmware/esp32s3/build/*.bin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: esp32s3-native-cvnss-unflashed-binaries
+          path: |
+            firmware/esp32s3/build/*.bin
+            firmware/esp32s3/build/firmware-sha256.txt
+            firmware/esp32s3/build/*.map
+          if-no-files-found: error
