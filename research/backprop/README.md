@@ -61,6 +61,20 @@ E1 and E2 must train on the same training sources and be selected on the same de
 
 Suggested controlled measurements: full-token accuracy, ambiguous-only accuracy, CER/WER, unseen-word accuracy, abstention rate, exact checked-code round trip, model bytes, ESP32-S3 Flash/RAM peak, latency p50/p95 and energy. Use multiple seeds, bootstrap confidence intervals and document any tuned parameters.
 
+## Generate valid candidates with the real CVNSS4.0 v5 converter
+
+Provide a UTF-8 text file with one plain Vietnamese sentence per line. The initial conservative builder accepts only Unicode letters separated by single ASCII spaces; it normalizes NFC and lowercases Vietnamese text. It **rejects** punctuation, digits and other unsupported lines with an audit file instead of silently deleting them.
+
+    node research/backprop/build_corpus.cjs input_sentences.txt corpus.jsonl
+
+This writes corpus.jsonl plus corpus.jsonl.audit.json. Candidates come from the real audit-safe converter candidatesForWord() and every candidate is re-encoded to ensure CODE agreement. The builder does **not** claim that an enumerated list exhausts all possible Unicode strings, nor does it perform leak-safe train/dev/test splitting. Group by document/source metadata and split separately before the benchmark; do not mix the same source across splits.
+
+The Base27 property-check is dependency free:
+
+    python3 research/backprop/check_base27.py
+
+It exhaustively proves SPACE=0 / A=1…Z=26 ↔ all 27 combinations of three ordinary trits. It is not evidence of native ternary hardware or data compression.
+
 ## Runnable experimental benchmark (host CPU; PyTorch)
 
 After independently generating and auditing real train/dev/test JSONL:
