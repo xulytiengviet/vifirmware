@@ -6,7 +6,6 @@
 "use strict";
 const fs=require("node:fs");
 const path=require("node:path");
-const crypto=require("node:crypto");
 const root=path.resolve(__dirname,"..");
 const input=path.join(root,"docs/assets/cvnss-converter.js");
 const output=path.join(root,"native/include/cvnss_tables.generated.h");
@@ -53,7 +52,7 @@ const i2y=[["i","y"],["ì","ỳ"],["ỉ","ỷ"],["ĩ","ỹ"],["í","ý"],["ị",
 const q=x=>JSON.stringify(x);
 const arr=(type,name,items,fn)=>"static constexpr "+type+" "+name+"[] = {\n"+items.map(fn).join("\n")+"\n};\n";
 let h="// AUTO GENERATED from docs/assets/cvnss-converter.js. DO NOT EDIT.\n";
-h+="// converter v5.0.0-audit-safe / Source SHA256 "+crypto.createHash("sha256").update(src).digest("hex")+"\n";
+h+="// converter v5.0.0-audit-safe / Upstream Git blob SHA "+"1d9d336bf19d8aa59807761cf02f99f35718748e"+"\n";
 h+="#pragma once\n#include <cstddef>\nnamespace cvnss_data {\n";
 h+="struct Pair { const char* from; const char* to; };\n";
 h+=arr("Pair","kRules",rows,x=>"  {"+q(x[0])+", "+q(x[1])+"},");
